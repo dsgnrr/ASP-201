@@ -21,6 +21,25 @@ namespace ASP_201.Controllers
         {
             return View();
         }
+        public IActionResult ProductsTable()
+        {
+            Models.Home.PassDataModel model = new()
+            {
+                Header = "Products table",
+                Title = "Products table",
+                Products = new()
+                {
+                    new(){Name="Зарядний кабель",       Price=210    , Image="pic1.png" },
+                    new(){Name="Маніпулятор \'миша\'",  Price=399.50 , Image="pic2.png" },
+                    new(){Name="Наліпка\'Smiley\'",     Price=2.95   , Image="pic2.png" },
+                    new(){Name="Серветки для монітору", Price=100    , Image="pic1.png" },
+                    new(){Name="USB ліхтарик",          Price=49.50  , Image="pic1.png" },
+                    new(){Name="Аккумулятор",           Price=280     },
+                    new(){Name="OC Windows Home",       Price=1250    },
+                }
+            };
+            return View(model);
+        }
         public IActionResult DisplayTemplates()
         {
             Models.Home.PassDataModel model = new()

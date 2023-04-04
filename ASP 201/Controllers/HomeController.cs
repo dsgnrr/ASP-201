@@ -21,6 +21,10 @@ namespace ASP_201.Controllers
         {
             return View();
         }
+        public IActionResult UrlPage()
+        {
+            return View();
+        }
         public IActionResult ProductsTable()
         {
             Models.Home.PassDataModel model = new()

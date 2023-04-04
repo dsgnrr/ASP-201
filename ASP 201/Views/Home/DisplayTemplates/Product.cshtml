@@ -1,0 +1,13 @@
+﻿@model ASP_201.Models.Home.Product
+@{string pic="/img/pic1.png";}
+<div class="card" style="width: 18rem;">
+  <img class="card-img-top" src=@pic alt="Card image cap">
+  <div class="card-body">
+    <h5 class="card-title">@Model.Name</h5>
+    <p class="card-text">
+        Найкращий вибір цього тижня:
+        @Model.Name всього лише за @Model.Price грн.
+    </p>
+    <a href="#" class="btn btn-primary">Придбати</a>
+  </div>
+</div>

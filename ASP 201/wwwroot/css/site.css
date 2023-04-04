@@ -16,3 +16,10 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.products-container {
+    /*border: 1px solid tomato;*/
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px
+}

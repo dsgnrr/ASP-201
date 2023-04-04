@@ -17,6 +17,10 @@ namespace ASP_201.Controllers
         {
             return View();
         }
+        public IActionResult TagHelpers()
+        {
+            return View();
+        }
         public IActionResult DisplayTemplates()
         {
             Models.Home.PassDataModel model = new()
@@ -25,13 +29,13 @@ namespace ASP_201.Controllers
                 Title = "Шаблони відображення даних",
                 Products = new()
                 {
-                    new(){Name="Зарядний кабель",       Price=210    },
-                    new(){Name="Маніпулятор \'миша\'",  Price=399.50 },
-                    new(){Name="Наліпка\'Smiley\'",     Price=2.95   },
-                    new(){Name="Серветки для монітору", Price=100    },
-                    new(){Name="USB ліхтарик",          Price=49.50  },
-                    new(){Name="Аккумулятор",           Price=280    },
-                    new(){Name="OC Windows Home",       Price=1250   },
+                    new(){Name="Зарядний кабель",       Price=210    , Image="pic1.png" },
+                    new(){Name="Маніпулятор \'миша\'",  Price=399.50 , Image="pic2.png" },
+                    new(){Name="Наліпка\'Smiley\'",     Price=2.95   , Image="pic2.png" },
+                    new(){Name="Серветки для монітору", Price=100    , Image="pic1.png" },
+                    new(){Name="USB ліхтарик",          Price=49.50  , Image="pic1.png" },
+                    new(){Name="Аккумулятор",           Price=280     },
+                    new(){Name="OC Windows Home",       Price=1250    },
                 }
             };
             return View(model);

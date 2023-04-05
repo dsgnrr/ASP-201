@@ -1,4 +1,7 @@
-﻿@{
+﻿@using ASP_201.Models.User;
+@model ASP_201.Models.User.RegistrationModel
+
+@{
     ViewData["Title"] = "Registration";
 }
 
@@ -15,27 +18,107 @@
 - E-mail
 -->
 
-<form>
+<form method="post"
+    asp-controller="User"
+    asp-action="Register">
     <div class="form-group">
-        <label for="exampleInputPassword1">Login</label>
-        <input type="text" class="form-control" id="InputLogin" placeholder="Login">
+        <label asp-for="Login">Логін</label>
+        <input type="text" 
+            class="form-control" 
+            asp-for="Login" 
+            placeholder="Виберіть собі логін"/>
     </div>
     <div class="form-group">
-        <label for="exampleInputPassword1">Password</label>
-        <input type="password" class="form-control" id="InputPassword1" placeholder="Password">
+        <label asp-for="Password">Пароль</label>
+        <input type="password" 
+            class="form-control" 
+        asp-for="Password" 
+        placeholder="Введіть ваш пароль"/>
     </div>
     <div class="form-group">
-        <label for="exampleInputPassword1">Repeat password</label>
-        <input type="password" class="form-control" id="InputPassword2" placeholder="Repeat password">
+        <label asp-for="RepeatPassword">Підтвердження паролю</label>
+        <input type="password"
+            class="form-control" 
+            asp-for="RepeatPassword" placeholder="Підтвердіть ваш пароль">
     </div>
     <div class="form-group">
-        <label for="exampleInputPassword1">Fullname</label>
-        <input type="text" class="form-control" id="InputFullname" placeholder="Name Surname">
+        <label asp-for="RealName">Повне ім'я</label>
+        <input type="text" 
+            class="form-control" 
+            asp-for="RealName" 
+            placeholder="Введіть ім'я та прізвище'">
+        <small id="realNameHelp" class="form-text text-muted">Без вашої згоди ім'я не буде показуватись іншим користувачам</small>
     </div>
     <div class="form-group">
-        <label for="exampleInputEmail1">Email address</label>
-        <input type="email" class="form-control" id="InputEmail" aria-describedby="emailHelp" placeholder="Enter email">
-        <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+        <label asp-for="Email">Email адреса</label>
+        <input type="email" 
+            class="form-control" 
+            asp-for="Email"
+            aria-describedby="emailHelp" 
+            placeholder="Введіть email адресу">
+        <small id="emailHelp" class="form-text text-muted">Без вашої згоди адреса не буде показуватись іншим користувачам</small>
     </div>
-    <button type="submit" class="btn btn-primary">Submit</button>
+    <div class="form-check">
+        <input type="checkbox" class="form-check-input" asp-for="IsAgree">
+        <label class="form-check-label" asp-for="IsAgree">Погоджуюсь слідувати правилам сайту</label>
+    </div>
+    <button type="submit" class="btn btn-primary">Реєстрація</button>
 </form>
+@if(ViewData["registrationModel"] is RegistrationModel registrationModel)
+{
+    // була передача даних
+   @* var registrationModel = ViewData["registrationModel"] as RegistrationModel; *@
+    <p>
+        Передані дані<br/>
+        @registrationModel.Login<br />
+        @registrationModel.Password<br />
+        @registrationModel.RepeatPassword<br />
+        @registrationModel.Email<br />
+        @registrationModel.RealName<br />
+    </p>
+}
+<hr/>
+<p>
+     Що таке форма?
+     Це засіб HTML/браузера відправляти дані. Форму можна вважати розширенням поняття
+     "посилання", яке окрім переходу на задану адресу також пересилає на неї дані
+     (долучає дані до запиту, що формується на цю адресу). Відправлення форми, як і
+     перехід за посиланням, руйнує дану сторінку і створює нову з відповіді на запит.
+</p>
+<p>
+    Форма обмежується тегом &lt;form> на сторінці може бути довільна кількість форм,
+    кожна форма включє у запит тільки ті дані, що належать її контенту (між
+    відкритими та закритими тегами). Кожна форма має свою адресу відправлення, тобто
+    різні форми можуть посилатись на різні адреси.
+</p>
+<p>
+    Спосіб передачі параметрів визначається з атрибутів форми: <br/>
+    <b>method</b> : get (default) або post<br />
+    <b>enctype</b>: application/x-www-form-urlencoded (default) або multipart/form-data<br />
+    - метод HTTP-запиту - один з двох методів HTTP запиту (згідно зі стандартом https://www.rfc-editor.org/rfc/rfc7231#page-22)
+    З точки зору форм, метод регулює спосіб включення даних до HTTP-пакету: <br/>
+    <ul>
+        <li>
+            GET: ...?Login=логин&Password=...<br/>
+            дані включаються безпосередньо в URL, утворюючи секцію "query"(параметрів запиту).
+        </li>
+        <li>
+            POST: такі саме дані (?Login=логин&Password=) включаються у тіло запиту.
+            У складі URL вони не відображаються, для їх аналізу слід відкрити інструмент
+            "Network" у консолі браузера, сфокусуватись на даний запит та відкрити таб "Playload"
+        </li>
+    </ul>
+</p>
+<p>
+    Як вибрати метод форми?<br/>
+    <ul>
+        <li>
+            GET - коли передаються невеликі дані, що не мають секретності.
+            Головна перевага - є можливість створити постійне посилання із певними даними. <br/>
+        </li>
+        <li>
+            POST - вважається більш захищеним (насправді лише від зовнішнього погляду)
+            Головна перевага - можливість передавання великих даних, у т.ч. файлів
+        </li>
+    </ul>
+</p>

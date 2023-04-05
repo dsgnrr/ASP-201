@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using ASP_201.Models.User;
+using Microsoft.AspNetCore.Mvc;
 
 namespace ASP_201.Controllers
 {
@@ -11,6 +12,12 @@ namespace ASP_201.Controllers
         public IActionResult Registration()
         {
             return View();
+        }
+        public IActionResult Register(RegistrationModel model)
+        {
+            ViewData["registrationModel"] = model;
+            // спосіб перейти на View з іншою назвою, ніж метод
+            return View("Registration");
         }
     }
 }

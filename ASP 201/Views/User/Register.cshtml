@@ -1,0 +1,21 @@
+﻿@using ASP_201.Models.User
+@model RegistrationModel
+
+@{
+    ViewData["Title"] = "Вітання";
+}
+
+<div>
+    <h1 class="display-4">Реєстрація пройшла успішно</h1>
+</div>
+<h4>
+    Шановний <strong>@Model.RealName</strong>!
+</h4>
+<p>
+    Вітаємо вас на нашому сайті. Для входу ви можете використовувати
+    свій логін та пароль.
+</p>
+@if(Model.Avatar is not null)
+{
+    <img src="/avatars/@(Model.Avatar.FileName)" alt="Avatar"/>
+}

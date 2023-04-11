@@ -7,6 +7,7 @@
         public String RepeatPassword { get; set; } = null;
         public String Email { get; set; } = null;
         public String RealName { get; set; } = null;
-        public bool IsAgree { get; set; }
+        public bool IsAgree { get; set; }=false;
+        public IFormFile Avatar { get; set; }=null!;
     }
 }

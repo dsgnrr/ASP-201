@@ -95,9 +95,17 @@ namespace ASP_201.Controllers
             // будемо вважати аватар необов'язковим, обробляємо лише якщо переданий
             if(registrationModel.Avatar is not null) //є файл
             {
-                String path = "wwwroot/avatars/" + registrationModel.Avatar.FileName;
-                using FileStream fs = new(path, FileMode.Create);
-                registrationModel.Avatar.CopyTo(fs);
+                if (registrationModel.Avatar.Length > 1024)
+                {
+                    String path = "wwwroot/avatars/" + registrationModel.Avatar.FileName;
+                    using FileStream fs = new(path, FileMode.Create);
+                    registrationModel.Avatar.CopyTo(fs);
+                }
+                else
+                {
+                    registerValidation.AvatarMessage = "Розмір аватарки має бути більше 1 кБ";
+                    isModelValid= false;
+                }
             }
 
             #endregion

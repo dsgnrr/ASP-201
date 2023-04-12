@@ -11,4 +11,19 @@
     <Folder Include="wwwroot\avatars\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Include="wwwroot\homework_screenshots\hw5\dz1.png" />
+    <None Include="wwwroot\homework_screenshots\hw5\dz2.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="7.0.5" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="7.0.5" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.5">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="7.0.0" />
+  </ItemGroup>
+
 </Project>

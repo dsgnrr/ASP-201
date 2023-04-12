@@ -1,0 +1,74 @@
+﻿@{
+    ViewData["Title"] = "Контекст";
+}
+
+<div>
+    <h1 class="display-4">Контекст даних</h1>
+</div>
+<p>
+    При роботі з веб-застосунками питання БД у більшості випадків
+    вирішується віддаленим хостингом - БД окремо від бекенду сайту.
+    Рекомендована в ASP технологія - Entity Framework Core
+</p>
+<p>
+    Для встановлення засобів EF Core підключаємо пакети NuGet
+</p>
+<ul>
+    <li>Microsoft.EntityFrameworkCore</li>
+    <li>Microsoft.EntityFrameworkCore.Tools - Інструменти PM консолі</li>
+    <li>
+        Залежно від типу БД: 
+        Microsoft.EntityFrameworkCore.SqlServer (MS SQL)
+        Pomelo.EntityFrameworkCore.MySql (Oracle MySQL)
+    </li>
+    <li>
+        dotnet tool install --global dotnet-ef<br/>
+        Аналог консолі PM, тільки для командного рядка (одноразово)
+    </li>
+</ul>
+<p>
+    Описуємо класи сутностей та клас-контекст. Створюємо папку Data,
+    у ній Entity.
+    У папці Entity - клас User, у Data - DataContext
+</p>
+<p>
+    Оскільки ASP проєкт керується інвертором управління, конструювання
+    об'єктів має бути перенесено на нього. Відповідно, конструктори
+    контектсу слід делегувати батьківському класу <br/>
+    <code>
+        public DataContext(DbContextOptions options) : base(options)<br />
+        { }<br/>
+    </code>
+</p>
+<p>
+    Рядок (рядки) підключення прийнято встановлювати у файлі "appsettings.json".
+    У цей файл слід додати секцію
+    <code>
+    "ConnectionStrings": { <br/>
+        "MsDb": "Data Source=(LocalDB)\\MSSQLLocalDB;Initial Catalog=ef201asp;Integrated Security=True",<br />
+        "MySqlDb": "Server=aws.connect.psdb.cloud;Database=main_db;user=f9w3ig02k3ayk20yub29;password=pscale_pw_hliRrBewAR5dQpsAdBqzOUnlQwoTHGAIIU6ozw0bEXq;SslMode=VerifyFull;"<br />
+        }<br />
+    </code>
+</p>
+<p>
+    Далі переходимо у Program.cs і реєструємо контекст даних.
+    Варіанти реєстрації див. у файлі.
+</p>
+<p>
+    Створюємо і застосовуємо міграції. Варіанти з PM консолью було розглянуто
+    при вивченні ADO, тут наведемо приклади з терміналом.<br />
+    Tools - Command Line - PowerShell<br />
+    Переконуємось що усі файлі збережені, а краще зробити Build, бо
+    інструменти командного рядку не виводять детальні помилки.<br />
+    <code>
+        dotnet tool install --global dotnet-ef<br />
+        dotnet ef migrations add Initial<br/>
+        dotnet ef database update<br />
+    </code>
+   
+</p>
+<p>
+    Використання контексту - за правилами інжекції служб<br />
+    Користувачів у БД: @ViewData["UsersCount"]
+</p>
+<p></p>

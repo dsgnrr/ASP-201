@@ -2,6 +2,7 @@
 using ASP_201.Models;
 using ASP_201.Services;
 using ASP_201.Services.Hash;
+using ASP_201.Services.Random;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
@@ -15,13 +16,15 @@ namespace ASP_201.Controllers
         private readonly StampService _stampService;
         private readonly IHashService _hashService;
         private readonly DataContext dataContext;
+        private readonly IRandomService randomService;
 
         public HomeController(ILogger<HomeController> logger,
                               DateService dateService,
                               TimeService timeService,
                               StampService stampService,
                               IHashService hashService,
-                              DataContext dataContext)
+                              DataContext dataContext,
+                              IRandomService randomService)
         {
             _logger = logger;
             _dateService = dateService;
@@ -29,11 +32,13 @@ namespace ASP_201.Controllers
             _stampService = stampService;
             _hashService = hashService;
             this.dataContext = dataContext;
+            this.randomService = randomService;
         }
 
         public ViewResult Context()
         {
             ViewData["UsersCount"] = dataContext.Users.Count();
+            ViewData["EmailCode"] = randomService.GetRandomCode(6);
             return View();
         }
 

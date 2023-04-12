@@ -17,5 +17,5 @@
 </p>
 @if(Model.Avatar is not null)
 {
-    <img src="/avatars/@(Model.Avatar.FileName)" alt="Avatar"/>
+    <img src="/avatars/@(ViewData["savedName"])" alt="Avatar" style="max-height:220px; max-width:160px"/>
 }

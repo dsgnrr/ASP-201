@@ -4,20 +4,25 @@
 
 <div>
     <h1 class="display-4">ASP</h1>
-    <p><a href="/Home/Intro">Вступ</a>.</p>
-    <p><a href="/Home/Scheme">Схема взаємодії</a>.</p>
-    <p><a href="/Home/UrlPage">URL</a>.</p>
-    <p><a href="/Home/Razor">Основи Razor</a>.</p>
+    <h3><a href="/Home/Intro">Вступ</a>.</h3>
+    <h3><a href="/Home/Scheme">Схема взаємодії</a>.</h3>
+    <h3><a href="/Home/UrlPage">URL</a>.</h3>
+    <h3><a href="/Home/Razor">Основи Razor</a>.</h3>
     
     <!-- Пряме посилання - не чутливе до змін правил маршрутизації -->
-    <p><a href="/Home/PassData">Моделі передачі даних</a>.</p>
-    <p><a href="/Home/ProductsTable">Таблиця з продуктами ДЗ</a>.</p>
+    <h3><a href="/Home/PassData">Моделі передачі даних</a>.</h3>
+    <h3><a href="/Home/ProductsTable">Таблиця з продуктами ДЗ</a>.</h3>
     
     <!-- тег-помічник - сформує посилання за діючим правилом маршрутизації -->
-    <p><a asp-controller="Home"asp-action="DisplayTemplates">Шаблони відображення даних</a>.</p>
+    <h3><a asp-controller="Home"asp-action="DisplayTemplates">Шаблони відображення даних</a>.</h3>
     
     <!-- незазначені атрибути помічника - беруться з оточення: 
     контроллер буде підставлено поточний - Home -->
-    <p><a asp-action="TagHelpers">Тег-помічники</a>.</p>
-    <p><a asp-controller="User">Сторінка користувача</a>.</p>
+    <h3><a asp-action="TagHelpers">Тег-помічники</a>.</h3>
+
+    <h3><a asp-action="Services">Сервіси (служби)</a>.</h3>
+
+
+    <br/>
+    <h3><a asp-controller="User">Сторінка користувача</a>.</h3>
 </div>

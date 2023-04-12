@@ -1,4 +1,5 @@
 ﻿using ASP_201.Models.User;
+using ASP_201.Services.Hash;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.RegularExpressions;
 
@@ -6,6 +7,16 @@ namespace ASP_201.Controllers
 {
     public class UserController : Controller
     {
+        private ILogger<UserController> _logger;
+        private readonly IHashService _hashService;
+
+        public UserController(IHashService hashService, 
+                              ILogger<UserController> logger)
+        {
+            _hashService = hashService;
+            _logger = logger;
+        }
+
         public IActionResult Index()
         {
             return View();
@@ -97,9 +108,17 @@ namespace ASP_201.Controllers
             {
                 if (registrationModel.Avatar.Length > 1024)
                 {
-                    String path = "wwwroot/avatars/" + registrationModel.Avatar.FileName;
+                    // Генеруємо для файла нове ім'я, але зберігаємо розширення
+                    String ext = Path.GetExtension(registrationModel.Avatar.FileName);
+                    // TODO: перевірити розширення на перелік дозволених
+                    String savedName = _hashService.Hash(
+                        registrationModel.Avatar.FileName + DateTime.Now)[..16]
+                        + ext;
+
+                    String path = "wwwroot/avatars/" + savedName;
                     using FileStream fs = new(path, FileMode.Create);
                     registrationModel.Avatar.CopyTo(fs);
+                    ViewData["savedName"] = savedName;
                 }
                 else
                 {

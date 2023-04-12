@@ -1,4 +1,14 @@
+using ASP_201.Services;
+using ASP_201.Services.Hash;
+
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddTransient<DateService>();
+builder.Services.AddScoped<TimeService>();
+builder.Services.AddSingleton<StampService>();
+
+//bind IHashService to Md5HashService
+builder.Services.AddSingleton<IHashService, Md5HashService>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();

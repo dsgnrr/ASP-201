@@ -112,10 +112,17 @@ namespace ASP_201.Controllers
                     String ext = Path.GetExtension(registrationModel.Avatar.FileName);
                     // TODO: перевірити розширення на перелік дозволених
                     String savedName = _hashService.Hash(
-                        registrationModel.Avatar.FileName + DateTime.Now)[..16]
-                        + ext;
-
+                    registrationModel.Avatar.FileName + DateTime.Now)[..16]
+                        +ext;
                     String path = "wwwroot/avatars/" + savedName;
+                    
+                    while(System.IO.File.Exists(path))
+                    {
+                        savedName = _hashService.Hash(
+                            registrationModel.Avatar.FileName + DateTime.Now)[..16]
+                            + ext;
+                        path = "wwwroot/avatars/" + savedName;
+                    }
                     using FileStream fs = new(path, FileMode.Create);
                     registrationModel.Avatar.CopyTo(fs);
                     ViewData["savedName"] = savedName;

@@ -38,7 +38,7 @@ namespace ASP_201.Controllers
         public ViewResult Context()
         {
             ViewData["UsersCount"] = dataContext.Users.Count();
-            ViewData["EmailCode"] = randomService.GetRandomCode(6);
+            ViewData["EmailCode"] = randomService.ConfirmCode(6);
             return View();
         }
 

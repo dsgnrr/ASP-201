@@ -1,6 +1,9 @@
 ﻿using ASP_201.Data;
+using ASP_201.Data.Entity;
 using ASP_201.Models.User;
 using ASP_201.Services.Hash;
+using ASP_201.Services.Kdf;
+using ASP_201.Services.Random;
 using Microsoft.AspNetCore.Mvc;
 using System.Text.RegularExpressions;
 
@@ -11,14 +14,19 @@ namespace ASP_201.Controllers
         private ILogger<UserController> _logger;
         private readonly IHashService _hashService;
         private readonly DataContext dataContext;
-
+        private readonly IRandomService randomService;
+        private readonly IKdfService kdfService;
         public UserController(IHashService hashService,
                               ILogger<UserController> logger,
-                              DataContext dataContext)
+                              DataContext dataContext,
+                              IRandomService randomService,
+                              IKdfService kdfService)
         {
             _hashService = hashService;
             _logger = logger;
             this.dataContext = dataContext;
+            this.randomService = randomService;
+            this.kdfService = kdfService;
         }
 
         public IActionResult Index()
@@ -108,14 +116,15 @@ namespace ASP_201.Controllers
 
             #region Avatar
             // будемо вважати аватар необов'язковим, обробляємо лише якщо переданий
-            if(registrationModel.Avatar is not null) //є файл
+            String savedName = null;
+            if (registrationModel.Avatar is not null) //є файл
             {
                 if (registrationModel.Avatar.Length > 1024)
                 {
                     // Генеруємо для файла нове ім'я, але зберігаємо розширення
                     String ext = Path.GetExtension(registrationModel.Avatar.FileName);
                     // TODO: перевірити розширення на перелік дозволених
-                    String savedName = _hashService.Hash(
+                    savedName = _hashService.Hash(
                     registrationModel.Avatar.FileName + DateTime.Now)[..16]
                         +ext;
                     String path = "wwwroot/avatars/" + savedName;
@@ -143,6 +152,23 @@ namespace ASP_201.Controllers
             // якщо всі перевірки пройдені, то переходимо на нову сторінку з вітаннями
             if (isModelValid)
             {
+                String salt = randomService.RandomString(16);
+                User user = new()
+                {
+                    Id = Guid.NewGuid(),
+                    Login = registrationModel.Login,
+                    RealName = registrationModel.RealName,
+                    Email = registrationModel.Email,
+                    EmailCode = randomService.ConfirmCode(6),
+                    PasswordSalt = salt,
+                    PasswordHash = kdfService.GetDerivedKey(registrationModel.Password, salt),
+                    Avatar = savedName,
+                    RegisterDt = DateTime.Now,
+                    LastEnterDt = null
+                };
+                dataContext.Users.Add(user);
+                dataContext.SaveChangesAsync();
+
                 return View(registrationModel);
             }
             else // не всі дані валідні — повертаємо на форму реєстрації

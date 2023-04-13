@@ -2,6 +2,7 @@
 {
     public interface IRandomService
     {
-        String GetRandomCode(int length);
+        String ConfirmCode(int length);
+        String RandomString(int length);
     }
 }

@@ -5,6 +5,7 @@ using ASP_201.Services.Hash;
 using ASP_201.Services.Kdf;
 using ASP_201.Services.Random;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Primitives;
 using System.Text.RegularExpressions;
 
 namespace ASP_201.Controllers
@@ -180,6 +181,48 @@ namespace ASP_201.Controllers
             }
 
            
+        }
+        
+        [HttpPost] // метод доступний тільки для POST запитів
+        public String AuthUser()
+        {
+            // альтернативний (до моделей) спосіб отримання параметрів запиту
+            StringValues loginValues = Request.Form["user-login"];
+            StringValues paswwordValues = Request.Form["user-password"];
+            // колекція loginValues формується при будь-якому ключі, але для
+            // неправильних (відсутніх) ключів вона порожня
+            if (loginValues.Count == 0) 
+            {
+                // немає логіну у складі полів
+                return "Missed required parameter: user-login";
+            }
+           
+            if (paswwordValues.Count == 0)
+            {
+                // немає логіну у складі полів
+                return "Missed required parameter: user-password";
+            }
+
+            String login = loginValues[0] ?? "";
+            String password = paswwordValues[0] ?? "";
+            
+            // шукаємо користувача за логіном
+            User? user = dataContext.Users
+                .Where(u => u.Login == login)
+                .FirstOrDefault();
+            if(user is not null)
+            {
+                // якщо знайшли - перевіряємо пароль (derived key)
+                if (user.PasswordHash == kdfService
+                    .GetDerivedKey(password, user.PasswordSalt)) 
+                {
+                    //дані перевірені - користувач автентифікований - зберігаємо у сесії
+                    HttpContext.Session.SetString("authUserId", user.Id.ToString());
+                    return "OK";
+                }
+            }
+
+            return "Авторизацію відхилено";
         }
     }
 }

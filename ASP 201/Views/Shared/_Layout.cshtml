@@ -6,7 +6,7 @@
     <title>@ViewData["Title"] - ASP_201</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/ASP_201.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/ASP 201.styles.css" asp-append-version="true" />
 </head>
 <body>
     <header>
@@ -28,13 +28,21 @@
                     </ul>
                 </div>
             </div>
-            <button title="Log in" type="button" class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-right" viewBox="0 0 16 16">
+            @if (ViewData["authUser"] is null)
+            {
+                <button title="Log in" type="button" class="btn btn-outline-info mx-3" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-right" viewBox="0 0 16 16">
                     <path fill-rule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0v2z" />
                     <path fill-rule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z" />
                 </svg>
-            </button>
-
+                </button>
+            }
+            else
+            {
+                <span>
+                    @ViewData["authUser"]
+                </span>
+            }
         </nav>
     </header>
     <div class="container">
@@ -53,7 +61,7 @@
     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-                <form>
+                <form asp-controller="User" asp-action="AuthUser" method="post">
                     <div class="modal-header">
                         <h1 class="modal-title fs-5" id="exampleModalLabel">Автентифікація</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -76,14 +84,47 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрити</button>
-                        <button type="submit" class="btn btn-primary">Вхід</button>
+                        <button type="button" class="btn btn-primary" id="login-button">Вхід</button>
                     </div>
                 </form>
             </div>
         </div>
     </div>
 
+    <script>
+        document.addEventListener("DOMContentLoaded",()=>{
+            const loginButton = document.getElementById("login-button");
+            if (!loginButton) throw "login-button not found";
+            loginButton.addEventListener("click",loginButtonClick);
+        });
+        function loginButtonClick(){
+            const loginInput=document.getElementById("user-login");
+            if (!loginInput) throw "user-login input not found";
+            const login =loginInput.value;
 
+            const passwordInput = document.getElementById("user-password");
+            if (!passwordInput) throw "user-password input not found";
+            const password = passwordInput.value;
+
+            window.fetch("/User/AuthUser",{
+                method:"POST",
+                headers:{
+                    "Content-Type":"application/x-www-form-urlencoded"
+                },
+                body:`user-login=${login}&user-password=${password}`
+            })
+            .then(r=>r.text())
+            .then(t=>{
+                // console.log(t);
+                if(t==="OK"){
+                    // оновлюємо сторінку для авторизації
+                    window.location.reload();
+                }else{
+
+                }
+            });
+        }
+    </script>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

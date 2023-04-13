@@ -35,6 +35,10 @@ namespace ASP_201.Controllers
             this.randomService = randomService;
         }
 
+        public ViewResult Sessions()
+        {
+            return View();
+        }
         public ViewResult Context()
         {
             ViewData["UsersCount"] = dataContext.Users.Count();
@@ -44,6 +48,7 @@ namespace ASP_201.Controllers
 
         public IActionResult Index()
         {
+            ViewData["authUser"] = HttpContext.Session.GetString("authUserId");
             return View();
         }
         public IActionResult TagHelpers()

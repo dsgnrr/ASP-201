@@ -4,5 +4,6 @@
     {
         String ConfirmCode(int length);
         String RandomString(int length);
+        String AvatarPhotoName(string photoName);
     }
 }

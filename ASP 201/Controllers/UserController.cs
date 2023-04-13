@@ -122,21 +122,8 @@ namespace ASP_201.Controllers
             {
                 if (registrationModel.Avatar.Length > 1024)
                 {
-                    // Генеруємо для файла нове ім'я, але зберігаємо розширення
-                    String ext = Path.GetExtension(registrationModel.Avatar.FileName);
-                    // TODO: перевірити розширення на перелік дозволених
-                    savedName = _hashService.Hash(
-                    registrationModel.Avatar.FileName + DateTime.Now)[..16]
-                        +ext;
+                    savedName = randomService.AvatarPhotoName(registrationModel.Avatar.FileName);
                     String path = "wwwroot/avatars/" + savedName;
-                    
-                    while(System.IO.File.Exists(path))
-                    {
-                        savedName = _hashService.Hash(
-                            registrationModel.Avatar.FileName + DateTime.Now)[..16]
-                            + ext;
-                        path = "wwwroot/avatars/" + savedName;
-                    }
                     using FileStream fs = new(path, FileMode.Create);
                     registrationModel.Avatar.CopyTo(fs);
                     ViewData["savedName"] = savedName;

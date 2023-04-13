@@ -28,6 +28,13 @@
                     </ul>
                 </div>
             </div>
+            <button title="Log in" type="button" class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-right" viewBox="0 0 16 16">
+                    <path fill-rule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0v2z" />
+                    <path fill-rule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z" />
+                </svg>
+            </button>
+
         </nav>
     </header>
     <div class="container">
@@ -41,6 +48,42 @@
             &copy; 2023 - ASP_201 - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
         </div>
     </footer>
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form>
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="exampleModalLabel">Автентифікація</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label for="user-login">Логін</label>
+                            <input type="text" id="user-login"
+                                   name="user-login"
+                                   class="form-control"
+                                   placeholder="Ввведіть свій логін" />
+                        </div>
+                        <div class="form-group">
+                            <label for="user-password">Пароль</label>
+                            <input type="password" id="user-password"
+                                   name="user-password"
+                                   class="form-control"
+                                   placeholder="Ввведіть свій пароль" />
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрити</button>
+                        <button type="submit" class="btn btn-primary">Вхід</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

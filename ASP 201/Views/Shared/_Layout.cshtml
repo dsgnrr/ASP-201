@@ -66,7 +66,7 @@
                         <h1 class="modal-title fs-5" id="exampleModalLabel">Автентифікація</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div class="modal-body">
+                    <div class="modal-body" id="modal-body">
                         <div class="form-group">
                             <label for="user-login">Логін</label>
                             <input type="text" id="user-login"
@@ -81,11 +81,15 @@
                                    class="form-control"
                                    placeholder="Ввведіть свій пароль" />
                         </div>
+                        
                     </div>
                     <div class="modal-footer">
+                        <b id="auth-error" style="color: darkred; font-size: 11px;"></b>
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрити</button>
                         <button type="button" class="btn btn-primary" id="login-button">Вхід</button>
+                       
                     </div>
+                    
                 </form>
             </div>
         </div>
@@ -120,7 +124,7 @@
                     // оновлюємо сторінку для авторизації
                     window.location.reload();
                 }else{
-
+                    document.getElementById("auth-error").innerText=t;
                 }
             });
         }

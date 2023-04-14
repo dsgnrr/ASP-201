@@ -35,10 +35,17 @@ namespace ASP_201.Controllers
             this.randomService = randomService;
         }
 
-        public ViewResult Sessions()
+        public ViewResult Sessions([FromQuery(Name ="session-attr")]String? sessionAttr)
         {
+            if (sessionAttr is not null)
+                HttpContext.Session.SetString("session-attribute", sessionAttr);
+
             return View();
         }
+        public ViewResult Middleware()
+        {
+            return View();
+        } 
         public ViewResult Context()
         {
             ViewData["UsersCount"] = dataContext.Users.Count();
@@ -48,7 +55,6 @@ namespace ASP_201.Controllers
 
         public IActionResult Index()
         {
-            ViewData["authUser"] = HttpContext.Session.GetString("authUserId");
             return View();
         }
         public IActionResult TagHelpers()

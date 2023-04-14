@@ -1,4 +1,5 @@
 using ASP_201.Data;
+using ASP_201.Middleware;
 using ASP_201.Services;
 using ASP_201.Services.Hash;
 using ASP_201.Services.Kdf;
@@ -79,6 +80,10 @@ app.UseAuthorization();
 
 // включення механізму сесій
 app.UseSession();
+
+// впровадження власного Middleware
+// app.UseMiddleware<SessionAuthMiddleware>(); -- без розширення
+app.UseSessionAuth(); // з розширенням
 
 app.MapControllerRoute(
     name: "default",

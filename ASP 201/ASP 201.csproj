@@ -8,10 +8,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="wwwroot\avatars\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Include="wwwroot\homework_screenshots\hw5\dz1.png" />
     <None Include="wwwroot\homework_screenshots\hw5\dz2.png" />
   </ItemGroup>

@@ -1,6 +1,7 @@
 ﻿using ASP_201.Data;
 using ASP_201.Data.Entity;
 using System.Runtime.CompilerServices;
+using System.Security.Claims;
 
 namespace ASP_201.Middleware
 {
@@ -42,6 +43,32 @@ namespace ASP_201.Middleware
                     if(authUser is not null)
                     {
                         context.Items.Add("authUser", authUser);
+                        /*  Передача відомостей про користувача шляхом посилання
+                         *  на об`єкт-сутність (Entity) підвищує зчеплення
+                         *  (залежність від реалізації), а також поширює відомості
+                         *  про "технічну" сутність User, потрібну ORM, на
+                         *  увесь проєкт, де потрібна авторизація.
+                         *  Для уніфікації існє механізм "тверджень" (Claims).
+                         *  При автентифікації користувачу задаються певні
+                         *  Claims, а при авторизації перевірється наявність
+                         *  потрібних з них (наприклад, вік, стать, телефон).
+                         */
+                        Claim[] claims = new Claim[]
+                        {
+                            new Claim(ClaimTypes.Sid ,userId),
+                            new Claim(ClaimTypes.Name ,authUser.RealName),
+                            new Claim(ClaimTypes.NameIdentifier ,authUser.Login),
+                            new Claim(ClaimTypes.UserData ,authUser.Avatar??String.Empty)
+                        };
+                        /*Створюємо власника (Principal) із даними твердженнями*/
+                        var principal = new ClaimsPrincipal(
+                            new ClaimsIdentity(
+                                claims,
+                                nameof(SessionAuthMiddleware)));
+
+                        /*  У HttpContext є вбудоване поле User з типом ClaimsPrincipal
+                         *  Встановлення його дозволить задіяти ASP механізми авторизації*/
+                        context.User = principal;
                     }
                 }
                 catch(Exception ex)

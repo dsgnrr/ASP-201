@@ -211,5 +211,42 @@ namespace ASP_201.Controllers
 
             return "Авторизацію відхилено";
         }
+
+        public RedirectToActionResult Logout()
+        {
+            HttpContext.Session.Remove("authUserId");
+            return RedirectToAction("Index", "Home");
+            /*  Redirect та інші питання з перенаправлення
+             *  Browser         Server
+             *  GET /home -----> (routing)->Home::Index()->View()
+             *            <----- 200 OK <!doctype html>...
+             *            
+             *  <a Logout> -----> User::Logout()->Redirect(...)
+             *  follow     <----- 302 (Redirect) Location: /home
+             *  GET /home  -----> (routing)->Home::Index()->View()
+             *    page     <----- 200 OK <!doctype html>... 
+             *    
+             *  301 - Permanent Redirect - перенесено на постійній основі,
+             *  як правило, сайт змінив URL
+             *  Довільний редірект слудіється GET запитом, якщо потрібно
+             *  зберігти початковий метод, то вживається
+             *  Redirect...PreserveMethod
+             *  
+             *  30х Redirect називають зовнішними, тому що інформація
+             *  доходить до браузера і змінюється URL в адресному рядку
+             *  http://.../addr1 ---> 302 Location /addr2
+             *  http://.../addr1 ---> 200 html
+             *  
+             *                               addr1.asp
+             * http://.../addr1(if...)   \   addr1.asp
+             *                            \  addr1.asp
+             *                      forward - внутрінє перенаправлення
+             *  (у браузері /addr1, але фактично відображено addr3.asp)     
+             */
+        }
+        public ViewResult Profile()
+        {
+            return View();
+        }
     }
 }

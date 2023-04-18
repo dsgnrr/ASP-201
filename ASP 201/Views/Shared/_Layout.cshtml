@@ -1,5 +1,5 @@
 ﻿@using ASP_201.Data.Entity;
-
+@using System.Security.Claims;
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -30,14 +30,41 @@
                     </ul>
                 </div>
             </div>
-            @if (Context.Items["authUser"] is User authUser)
+            @*if (Context.Items["authUser"] is User authUser)*@
+            @if(Context.User.Identity is not null
+            && Context.User.Identity.IsAuthenticated)
             {
-               <img src="~/avatars/@(authUser.Avatar)" 
-                    alt="Ava"
-                    title="@(authUser.Login)"
-                    style="max-width: 40px; max-height: 40px; border-radius: 50%;"/>
+                String userAvatar =
+                    Context.User.Claims
+                    .First(c => c.Type == ClaimTypes.UserData)
+                    .Value;
+                if (String.IsNullOrEmpty(userAvatar)) userAvatar = "no-avatar.png";
+
+                String userLogin =
+                    Context.User.Claims
+                    .First(c => c.Type == ClaimTypes.NameIdentifier)
+                    .Value;
+                    <a asp-controller="User" asp-action="Profile">             
+                        <img src="~/avatars/@(userAvatar)" 
+                        alt="Ava"
+                        title="@(userLogin)"
+                        style="max-width: 40px; max-height: 40px; border-radius: 50%;"/>
+                    </a>
+  
                     <a asp-controller="User" asp-action="Logout" class="mx-3" title="Вийти">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-box-arrow-right" viewBox="0 0 16 16"><path fill-rule="evenodd" d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0v2z" /><path fill-rule="evenodd" d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z" /></svg>
+                        <svg xmlns="http://www.w3.org/2000/svg" 
+                        width="16" 
+                        height="16" 
+                        fill="currentColor" 
+                        class="bi bi-box-arrow-right" 
+                        viewBox="0 0 16 16">
+                        <path 
+                            fill-rule="evenodd" 
+                            d="M10 12.5a.5.5 0 0 1-.5.5h-8a.5.5 0 0 1-.5-.5v-9a.5.5 0 0 1 .5-.5h8a.5.5 0 0 1 .5.5v2a.5.5 0 0 0 1 0v-2A1.5 1.5 0 0 0 9.5 2h-8A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h8a1.5 1.5 0 0 0 1.5-1.5v-2a.5.5 0 0 0-1 0v2z" 
+                            /><path 
+                                fill-rule="evenodd" 
+                                d="M15.854 8.354a.5.5 0 0 0 0-.708l-3-3a.5.5 0 0 0-.708.708L14.293 7.5H5.5a.5.5 0 0 0 0 1h8.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3z" 
+                                /></svg>
                     </a>
             }
             else

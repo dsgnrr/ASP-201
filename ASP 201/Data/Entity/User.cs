@@ -13,5 +13,10 @@
         public DateTime RegisterDt { get; set; }// момент реєстрації
         public DateTime? LastEnterDt { get; set; }// останній вхід до сайту
         public String? EmailCode { get; set; }
+
+        // Додано 2023-04-19 робота з Profile
+        public Boolean IsEmailPublic { get; set; }
+        public Boolean IsRealNamePublic { get; set; }
+        public Boolean IsDtPublicPublic { get; set; }
     }
 }

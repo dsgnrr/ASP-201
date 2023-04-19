@@ -44,11 +44,11 @@
                     Context.User.Claims
                     .First(c => c.Type == ClaimTypes.NameIdentifier)
                     .Value;
-                    <a asp-controller="User" asp-action="Profile">             
+                    <a asp-controller="User" asp-action="Profile" asp-route-id="@userLogin">             
                         <img src="~/avatars/@(userAvatar)" 
                         alt="Ava"
                         title="@(userLogin)"
-                        style="max-width: 40px; max-height: 40px; border-radius: 50%;"/>
+                        style="max-width: 70px; max-height: 40px; border-radius: 50%;"/>
                     </a>
   
                     <a asp-controller="User" asp-action="Logout" class="mx-3" title="Вийти">

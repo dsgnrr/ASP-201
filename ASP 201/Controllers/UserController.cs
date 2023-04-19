@@ -49,6 +49,11 @@ namespace ASP_201.Controllers
                 registerValidation.LoginMessage = "Логін не може бути порожнім";
                 isModelValid = false;
             }
+            if(dataContext.Users.Count(u=>u.Login==registrationModel.Login)>0)
+            {
+                registerValidation.LoginMessage = "Логін вже використовується";
+                isModelValid = false;
+            }
             #endregion
 
             #region Password / Repeat Validation
@@ -244,9 +249,31 @@ namespace ASP_201.Controllers
              *  (у браузері /addr1, але фактично відображено addr3.asp)     
              */
         }
-        public ViewResult Profile()
+        public IActionResult Profile([FromRoute]String id)
         {
-            return View();
+            // _logger.LogInformation(id);
+            User? user = dataContext.Users
+                .FirstOrDefault(u => u.Login == id);
+            if (user is not null)
+            {
+                Models.User.ProfileModel model = new(user);
+                return View(model);
+            }
+            else
+            {
+                return NotFound();
+            }
+            /* Особиста сторінка / Профіль
+             * 1. Чи буде ця сторінка доступна іншим користувачам?
+             *  Так, користувачі можуть переглядати профіль інших користувачів
+             *  але тільки ті дані, що дозволив власник.
+             * 2. Як має формуватись адреса /User/Profile/????
+             *  а) Id
+             *  б) логін
+             *  Обираємо логін, в силу зручності поширення  посилання на власний
+             *  профіль
+             *  !! необхідно забезпечити унікальність логіну
+             */
         }
     }
 }

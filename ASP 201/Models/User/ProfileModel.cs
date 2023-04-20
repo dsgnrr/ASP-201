@@ -20,6 +20,11 @@ namespace ASP_201.Models.User
         public DateTime LastEnterDt { get; set; }
         public Boolean IsDatetimesPublic { get; set; }
 
+        /// <summary>
+        /// Чи є даний профіль персональний (для автентифікованого користувача)
+        /// </summary>
+        public bool IsPersonal { get; set; }
+
         public ProfileModel(Data.Entity.User user)
         {
             var thisProps = this.GetType().GetProperties();

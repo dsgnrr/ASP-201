@@ -13,7 +13,7 @@
         <!-- Breadcrumb -->
         <nav aria-label="breadcrumb" class="main-breadcrumb">
             <ol class="breadcrumb">
-                <li class="breadcrumb-item"><a href="index.html">Home</a></li>
+                <li class="breadcrumb-item"><a asp-action="Index" asp-controller="Home">Home</a></li>
                 <li class="breadcrumb-item"><a href="javascript:void(0)">User</a></li>
                 <li class="breadcrumb-item active" aria-current="page">User Profile</li>
             </ol>
@@ -69,10 +69,25 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-sm-3">
-                                <h6 class="mb-0">Full Name</h6>
+                                <h6 class="mb-0">Повне ім'я</h6>
                             </div>
-                            <div class="col-sm-9 text-secondary">
-                                @(Model.IsRealNamePublic ? Model.RealName : "Hidden")
+                            <div class="col-sm-8 text-secondary">
+                                @if(Model.IsRealNamePublic||Model.IsPersonal)
+                                {
+                                    <span id="realname" class="p-2">@Model.RealName</span>
+                                }
+                                else
+                                {
+                                    <i>Приховане</i>
+                                }
+                            </div>
+                            <div class="col-sm-1">
+                                @if(Model.IsPersonal)
+                                {
+                                    <img src="~/img/icons/pencil.svg"
+                                         role="button"
+                                         data-ref-field="realname"/>
+                                }
                             </div>
                         </div>
                         <hr>
@@ -80,8 +95,23 @@
                             <div class="col-sm-3">
                                 <h6 class="mb-0">Email</h6>
                             </div>
-                            <div class="col-sm-9 text-secondary">
-                                @(Model.IsEmailPublic ? Model.Email : "Hidden")
+                            <div class="col-sm-8 text-secondary">
+                                @if (Model.IsEmailPublic || Model.IsPersonal)
+                                {
+                                    <span id="email" class="p-2">@Model.Email</span>
+                                }
+                                else
+                                {
+                                    <i>Приховане</i>
+                                }
+                            </div>
+                            <div class="col-sm-1">
+                                @if (Model.IsPersonal)
+                                {
+                                    <img src="~/img/icons/pencil.svg"
+                                         role="button"
+                                         data-ref-field="email" />
+                                }
                             </div>
                         </div>
                         <hr>
@@ -89,8 +119,14 @@
                             <div class="col-sm-3">
                                 <h6 class="mb-0">Phone</h6>
                             </div>
-                            <div class="col-sm-9 text-secondary">
+                            <div class="col-sm-8 text-secondary">
                                 (239) 816-9029
+                            </div>
+                            <div class="col-sm-1">
+                                @if (Model.IsPersonal)
+                                {
+                                    <img src="~/img/icons/pencil.svg" />
+                                }
                             </div>
                         </div>
                         <hr>
@@ -98,8 +134,14 @@
                             <div class="col-sm-3">
                                 <h6 class="mb-0">Mobile</h6>
                             </div>
-                            <div class="col-sm-9 text-secondary">
+                            <div class="col-sm-8 text-secondary">
                                 (320) 380-4539
+                            </div>
+                            <div class="col-sm-1">
+                                @if (Model.IsPersonal)
+                                {
+                                    <img src="~/img/icons/pencil.svg" />
+                                }
                             </div>
                         </div>
                         <hr>
@@ -107,16 +149,22 @@
                             <div class="col-sm-3">
                                 <h6 class="mb-0">Address</h6>
                             </div>
-                            <div class="col-sm-9 text-secondary">
+                            <div class="col-sm-8 text-secondary">
                                 Bay Area, San Francisco, CA
+                            </div>
+                            <div class="col-sm-1">
+                                @if (Model.IsPersonal)
+                                {
+                                    <img src="~/img/icons/pencil.svg" />
+                                }
                             </div>
                         </div>
                         <hr>
-                        <div class="row">
+                        @*<div class="row">
                             <div class="col-sm-12">
                                 <a class="btn btn-info " target="__blank" href="https://www.bootdey.com/snippets/view/profile-edit-data-and-skills">Edit</a>
                             </div>
-                        </div>
+                        </div>*@
                     </div>
                 </div>
 
@@ -184,3 +232,37 @@
 
     </div>
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded",()=>{
+        for(let pencil of document.querySelectorAll("[data-ref-field]")){
+            pencil.addEventListener("click",editClick);
+        }
+    });
+    let fieldContent="";
+    function editClick(e){
+        const targetId = e.target.getAttribute("data-ref-field");
+        console.log(targetId);
+        const targetElement=document.getElementById(targetId);
+        targetElement.setAttribute("contenteditable", "true");
+        targetElement.focus();
+        targetElement.onblur=editingFinished;
+        targetElement.onkeydown=editingKeydown;
+        fieldContent=targetElement.textContent;
+        console.log(fieldContent);
+    }
+    function editingFinished(e){
+        const elem=e.target;
+        if(fieldContent!==elem.innerText){
+            if(confirm("Зберегти зміни?")){
+                console.log("Sending "+ elem.id + "="+elem.innerText);
+            }
+        }
+        elem.removeAttribute("contenteditable");
+    }
+    function editingKeydown(e){
+        if(e.key==="Enter"){
+            e.target.blur();
+        }
+    }
+</script>

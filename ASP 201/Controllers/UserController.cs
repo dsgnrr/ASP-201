@@ -6,6 +6,7 @@ using ASP_201.Services.Kdf;
 using ASP_201.Services.Random;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
+using System.Security.Claims;
 using System.Text.RegularExpressions;
 
 namespace ASP_201.Controllers
@@ -251,12 +252,27 @@ namespace ASP_201.Controllers
         }
         public IActionResult Profile([FromRoute]String id)
         {
+            // Задача: реалізувати можливість розрізнення
+            // власного та чужого профілів
             // _logger.LogInformation(id);
             User? user = dataContext.Users
                 .FirstOrDefault(u => u.Login == id);
             if (user is not null)
             {
                 Models.User.ProfileModel model = new(user);
+                // дістаємо відомості про автентифікацію
+                if(HttpContext.User.Identity is not null
+                    && HttpContext.User.Identity.IsAuthenticated)
+                {
+                    String userLogin =
+                        HttpContext.User.Claims
+                        .First(c => c.Type == ClaimTypes.NameIdentifier)
+                        .Value;
+                    if(userLogin==user.Login)
+                    {
+                        model.IsPersonal = true;
+                    }
+                }
                 return View(model);
             }
             else

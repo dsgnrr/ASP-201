@@ -234,34 +234,52 @@
 </div>
 
 <script>
-    document.addEventListener("DOMContentLoaded",()=>{
-        for(let pencil of document.querySelectorAll("[data-ref-field]")){
-            pencil.addEventListener("click",editClick);
+    document.addEventListener("DOMContentLoaded", () => {
+        for (let pensil of document.querySelectorAll("[data-ref-field]")) {
+            pensil.addEventListener("click", editClick);
+
         }
     });
-    let fieldContent="";
-    function editClick(e){
+    function editClick(e) {
         const targetId = e.target.getAttribute("data-ref-field");
-        console.log(targetId);
-        const targetElement=document.getElementById(targetId);
+        e.target.oldSrc = e.target.src;
+        e.target.src = "/img/icons/save.svg";
+        // console.log(targetId);
+        const targetElement = document.getElementById(targetId);
         targetElement.setAttribute("contenteditable", "true");
         targetElement.focus();
-        targetElement.onblur=editingFinished;
-        targetElement.onkeydown=editingKeydown;
-        fieldContent=targetElement.textContent;
-        console.log(fieldContent);
+        targetElement.onblur = editFinished;
+        targetElement.onkeydown = editKeydown;
+        targetElement.oldText = targetElement.innerText;
+        e.target.removeEventListener("click", editClick);
     }
-    function editingFinished(e){
-        const elem=e.target;
-        if(fieldContent!==elem.innerText){
-            if(confirm("Зберегти зміни?")){
-                console.log("Sending "+ elem.id + "="+elem.innerText);
-            }
+    function editFinished(e) {
+        const elem = e.target; // e.target -- targetElement -<span id="realname"...
+        if (elem.innerText != elem.oldText && confirm("Save")) {
+            const data={ // формуємо дані за серверною моделлю (UpdateRequestModel)
+                field:elem.id,
+                value:elem.innerText
+            };
+            const dataStr=JSON.stringify(data); // серіалізуємо дані
+            console.log("Sending " + dataStr);
+
+            window.fetch("/User/Update",{
+                method:"PUT",
+                headers:{
+                    "Content-Type":"application/json"
+                },
+                body: dataStr
+            }).then(r=>r.json()).then(console.log);
         }
         elem.removeAttribute("contenteditable");
+        // відновлюємо зображення на кнопці edit
+        const img = document.querySelector(`[data-ref-field=${elem.id}]`);
+        img.src = img.oldSrc;
+        //відновлюємо click на конопці але з затримкою
+        setTimeout(() => img.addEventListener("click", editClick), 250);
     }
-    function editingKeydown(e){
-        if(e.key==="Enter"){
+    function editKeydown(e) {
+        if (e.key == "Enter") {
             e.target.blur();
         }
     }

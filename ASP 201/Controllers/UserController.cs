@@ -4,6 +4,7 @@ using ASP_201.Models.User;
 using ASP_201.Services.Hash;
 using ASP_201.Services.Kdf;
 using ASP_201.Services.Random;
+using ASP_201.Services.Validation;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 using System.Security.Claims;
@@ -18,17 +19,20 @@ namespace ASP_201.Controllers
         private readonly DataContext dataContext;
         private readonly IRandomService randomService;
         private readonly IKdfService kdfService;
+        private readonly IValidationService validationService;
         public UserController(IHashService hashService,
                               ILogger<UserController> logger,
                               DataContext dataContext,
                               IRandomService randomService,
-                              IKdfService kdfService)
+                              IKdfService kdfService,
+                              IValidationService validationService)
         {
             _hashService = hashService;
             _logger = logger;
             this.dataContext = dataContext;
             this.randomService = randomService;
             this.kdfService = kdfService;
+            this.validationService = validationService;
         }
 
         public IActionResult Index()
@@ -80,19 +84,15 @@ namespace ASP_201.Controllers
             #endregion
 
             #region Email Validation
-            if (String.IsNullOrEmpty(registrationModel.Email))
+            if (!validationService.Validate(registrationModel.Email,ValidationTerms.NotEmpty))
             {
                 registerValidation.EmailMessage = "E-mail не може бути порожнім";
                 isModelValid = false;
             }
-            else
+            else if(!validationService.Validate(registrationModel.Email,ValidationTerms.Email))
             {
-                String emailRegex = @"^[\w.%+-]+@[\w.-]+\.[a-zA-Z]{2,}$";
-                if(!Regex.IsMatch(registrationModel.Email,emailRegex))
-                {
-                    registerValidation.EmailMessage = "E-mail не відповідає шаблону";
-                    isModelValid = false;
-                }
+                registerValidation.EmailMessage = "E-mail не відповідає шаблону";
+                isModelValid = false;
             }
             #endregion
 
@@ -315,13 +315,19 @@ namespace ASP_201.Controllers
                 switch (model.Field)
                 {
                     case "realname":
-                        user.RealName = model.Value;
-                        dataContext.SaveChanges();
+                        if (validationService.Validate(
+                            model.Value,
+                            ValidationTerms.RealName))
+                        {
+                            user.RealName = model.Value;
+                            dataContext.SaveChanges();
+                        }
+                        else throw new Exception(
+                            $"Validation error: field'{model.Field}' with value '{model.Value}'");
                         break;
                     default:
-                        throw new Exception("Invalid 'Field' attribute");
+                        throw new Exception($"Invalid 'Field' attribute: '{model.Field}'");
                 }
-
                 responseModel.Status = "Ok";
                 responseModel.Data = $"Field '{model.Field}' updated by value '{model.Value}'";
                 

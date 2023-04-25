@@ -269,7 +269,23 @@
                     "Content-Type":"application/json"
                 },
                 body: dataStr
-            }).then(r=>r.json()).then(console.log);
+            })
+            .then(r => {
+                // r - response, об'єкт, який відповідає за первісний пакет HTTP
+                // на даному етапі можна дізнатись статус-код відповіді, заголовки
+                if(r.status!=200){
+                    alert("Response unsuccessfull");
+                    return;                }
+                // але для отримання тіла пакету слід запустити його видобувач
+                return r.json(); // або r.text() / r.arrayBuffer() / r.blob() 
+            })
+            .then(j => {
+                console.log(j);
+                if(j.status != 'OK'){ // тут j.status - поле з об'єкту, що у тілі відповіді
+                    alert(j.data);
+                }
+                else{}
+            });
         }
         elem.removeAttribute("contenteditable");
         // відновлюємо зображення на кнопці edit

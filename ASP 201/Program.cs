@@ -4,6 +4,7 @@ using ASP_201.Services;
 using ASP_201.Services.Hash;
 using ASP_201.Services.Kdf;
 using ASP_201.Services.Random;
+using ASP_201.Services.Validation;
 using Microsoft.EntityFrameworkCore;
 using MySqlConnector;
 
@@ -19,6 +20,7 @@ builder.Services.AddSingleton<IHashService, Md5HashService>();
 builder.Services.AddSingleton<IRandomService, RandomServiceV1>();
 
 builder.Services.AddSingleton<IKdfService, HashKdfService>();
+builder.Services.AddSingleton<IValidationService, ValidationServiceV1>();
 
 /*
 //реєстрація контексту з підключенням до MS SQL Server

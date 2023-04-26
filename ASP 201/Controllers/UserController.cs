@@ -178,6 +178,15 @@ namespace ASP_201.Controllers
                         EmailCode = user.EmailCode,
                         ConfirmLink ="#"
                     });
+                emailService.Send(
+                   "congratulation",
+                   new Models.Email.ConfirmEmailModel
+                   {
+                       Email = user.Email,
+                       RealName = user.RealName,
+                       EmailCode = user.EmailCode,
+                       ConfirmLink = "#"
+                   });
 
                 return View(registrationModel);
             }

@@ -28,8 +28,15 @@
                             <img src="~/avatars/@(Model.Avatar)" alt="@(Model.Login)" class="rounded-circle" width="150">
                             <div class="mt-3">
                             <!-- Якщо дозволено, виводимо ім'я, інакше логін -->
-                                <h4>
-                                    @(Model.IsRealNamePublic ? Model.RealName : Model.Login)
+                                <h4 id="Name">
+                                    @if(Model.IsPersonal || Model.IsRealNamePublic)
+                                    {
+                                        @Model.RealName
+                                    }
+                                    else
+                                    {
+                                        @Model.Login
+                                    }
                                 </h4>
                                 <p class="text-secondary mb-1">Full Stack Developer</p>
                                 <p class="text-muted font-size-sm">Bay Area, San Francisco, CA</p>
@@ -256,6 +263,7 @@
     function editFinished(e) {
         const elem = e.target; // e.target -- targetElement -<span id="realname"...
         if (elem.innerText != elem.oldText && confirm("Save")) {
+            
             const data={ // формуємо дані за серверною моделлю (UpdateRequestModel)
                 field:elem.id,
                 value:elem.innerText
@@ -281,10 +289,15 @@
             })
             .then(j => {
                 console.log(j);
-                if(j.status != 'OK'){ // тут j.status - поле з об'єкту, що у тілі відповіді
-                    alert(j.data);
+                if(j.responseModel.status != 'OK'){ // тут j.status - поле з об'єкту, що у тілі відповіді
+                    alert("Response unsuccesfull");
                 }
-                else{}
+                else{
+                        if (e.target.id === 'realname') {
+                            const nameField = document.getElementById('Name');
+                            nameField.innerText = elem.innerText;
+                        }
+                }
             });
         }
         elem.removeAttribute("contenteditable");

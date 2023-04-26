@@ -1,6 +1,7 @@
 ﻿using ASP_201.Data;
 using ASP_201.Data.Entity;
 using ASP_201.Models.User;
+using ASP_201.Services.Email;
 using ASP_201.Services.Hash;
 using ASP_201.Services.Kdf;
 using ASP_201.Services.Random;
@@ -20,12 +21,14 @@ namespace ASP_201.Controllers
         private readonly IRandomService randomService;
         private readonly IKdfService kdfService;
         private readonly IValidationService validationService;
+        private readonly IEmailService emailService;
         public UserController(IHashService hashService,
                               ILogger<UserController> logger,
                               DataContext dataContext,
                               IRandomService randomService,
                               IKdfService kdfService,
-                              IValidationService validationService)
+                              IValidationService validationService,
+                              IEmailService emailService)
         {
             _hashService = hashService;
             _logger = logger;
@@ -33,6 +36,7 @@ namespace ASP_201.Controllers
             this.randomService = randomService;
             this.kdfService = kdfService;
             this.validationService = validationService;
+            this.emailService = emailService;
         }
 
         public IActionResult Index()
@@ -147,13 +151,15 @@ namespace ASP_201.Controllers
             if (isModelValid)
             {
                 String salt = randomService.RandomString(16);
+                String confirmEmailCode = randomService.ConfirmCode(6);
+               
                 User user = new()
                 {
                     Id = Guid.NewGuid(),
                     Login = registrationModel.Login,
                     RealName = registrationModel.RealName,
                     Email = registrationModel.Email,
-                    EmailCode = randomService.ConfirmCode(6),
+                    EmailCode = confirmEmailCode,
                     PasswordSalt = salt,
                     PasswordHash = kdfService.GetDerivedKey(registrationModel.Password, salt),
                     Avatar = savedName,
@@ -161,7 +167,17 @@ namespace ASP_201.Controllers
                     LastEnterDt = null
                 };
                 dataContext.Users.Add(user);
-                dataContext.SaveChangesAsync();
+                dataContext.SaveChanges();
+                // Якщо дані у БД додані, надсилаємо код підтвердження
+                emailService.Send(
+                    "confirm_email",
+                    new Models.Email.ConfirmEmailModel 
+                    {
+                        Email = user.Email,
+                        RealName = user.RealName,
+                        EmailCode = user.EmailCode,
+                        ConfirmLink ="#"
+                    });
 
                 return View(registrationModel);
             }
@@ -325,10 +341,19 @@ namespace ASP_201.Controllers
                         else throw new Exception(
                             $"Validation error: field'{model.Field}' with value '{model.Value}'");
                         break;
+                    case "email":
+                        if (validationService.Validate(model.Value, ValidationTerms.Email))
+                        {
+                            user.Email = model.Value;
+                            dataContext.SaveChanges();
+                        }
+                        else throw new Exception(
+                            $"Validation error: field '{model.Field}' with value '{model.Value}'");
+                        break;
                     default:
                         throw new Exception($"Invalid 'Field' attribute: '{model.Field}'");
                 }
-                responseModel.Status = "Ok";
+                responseModel.Status = "OK";
                 responseModel.Data = $"Field '{model.Field}' updated by value '{model.Value}'";
                 
             }

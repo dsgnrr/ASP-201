@@ -1,4 +1,5 @@
-﻿@{
+﻿@model ASP_201.Models.Home.SmtpConfig
+@{
     ViewData["Title"] = "Пошта";
 }
 
@@ -54,5 +55,19 @@
 <p>
     Дістаємо конфігурацію та перевіряємо успішність: @ViewData["config"]
 </p>
+<ul>
+    <li>
+       @Model.Host 
+    </li>
+    <li>
+        @Model.Port
+    </li>
+    <li>
+        @Model.Email
+    </li>
+    <li>
+        @Model.Ssl
+    </li>
+</ul>
 <p></p>
 <p></p>

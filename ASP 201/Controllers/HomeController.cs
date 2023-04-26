@@ -1,5 +1,6 @@
 ﻿using ASP_201.Data;
 using ASP_201.Models;
+using ASP_201.Models.Home;
 using ASP_201.Services;
 using ASP_201.Services.Hash;
 using ASP_201.Services.Random;
@@ -42,8 +43,14 @@ namespace ASP_201.Controllers
         public ViewResult EmailConfirmation()
         {
             // дістаємо параметр з конфігураціїї
-            ViewData["config"] = configuration["Smtp:Gmail:Host"];
-            return View();
+            var smtpConfig = new SmtpConfig()
+            {
+                Host = configuration["Smtp:Gmail:Host"] ?? "",
+                Port = int.Parse(configuration["Smtp:Gmail:Port"] ?? "-1"),
+                Email = configuration["Smtp:Gmail:Email"] ?? "",
+                Ssl = bool.Parse(configuration["Smtp:Gmail:Ssl"] ?? "false")
+            };
+            return View(smtpConfig);
         }
         public ViewResult Sessions([FromQuery(Name = "session-attr")] String? sessionAttr)
         {

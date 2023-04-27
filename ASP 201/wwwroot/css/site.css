@@ -82,3 +82,14 @@ body {
 .shadow-none {
     box-shadow: none !important;
 }
+/* filter-based colors */
+.filter-color-green {
+    filter: invert(62%) sepia(43%) saturate(679%) hue-rotate(47deg) brightness(94%) contrast(89%);
+}
+
+.filter-color-scarlet {
+    filter: invert(15%) sepia(89%) saturate(2613%) hue-rotate(356deg) brightness(85%) contrast(98%);
+}
+.filter-color-candy {
+    filter: invert(19%) sepia(87%) saturate(3998%) hue-rotate(13deg) brightness(84%) contrast(123%);
+}

@@ -1,5 +1,6 @@
 ﻿using ASP_201.Data;
 using ASP_201.Data.Entity;
+using ASP_201.Models;
 using ASP_201.Models.User;
 using ASP_201.Services.Email;
 using ASP_201.Services.Hash;
@@ -378,6 +379,56 @@ namespace ASP_201.Controllers
              * Приймає дані = описуємо модель цих даних
              * Повертає дані = описуємо модель
              */
+        }
+
+        [HttpPost]
+        public JsonResult ConfirmEmail([FromBody] string emailCode)
+        {
+            StatusDataModel model = new();
+
+            if(String.IsNullOrEmpty(emailCode))
+            {
+                model.Status ="406";
+                model.Data = "Empty code not acceptable";
+            }    
+            else if(HttpContext.User.Identity?.IsAuthenticated == false)
+            {
+                model.Status = "401";
+                model.Data = "Unauthenticated";
+            }
+            else
+            {
+                User? user =
+                   dataContext.Users.Find(
+                       Guid.Parse(
+                           HttpContext.User.Claims
+                           .First(c => c.Type == ClaimTypes.Sid)
+                           .Value
+                           ));
+                if(user is null)
+                {
+                    model.Status = "403";
+                    model.Data = "Forbidden (UnAthorized)";
+                }
+                else if (user.EmailCode is null)
+                {
+                    model.Status = "208";
+                    model.Data = "Already confirmed";
+                }
+                else if(user.EmailCode!=emailCode)
+                {
+                    model.Status = "406";
+                    model.Data = "Code not Accepted";
+                }
+                else
+                {
+                    user.EmailCode = null;
+                    dataContext.SaveChanges();
+                    model.Status = "200";
+                    model.Data = "OK";
+                }
+            }
+            return Json(model);
         }
     }
 }

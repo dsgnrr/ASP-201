@@ -276,8 +276,10 @@
                 </div>
             </div>
             <div class="modal-footer">
+                <button type="button" class="btn btn-success" id="resend-email-button">Надіслати новий код</button>
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Відміна</button>
                 <button type="button" class="btn btn-primary" id="confirm-email-button">Підтвердити</button>
+                
             </div>
         </div>
     </div>
@@ -292,6 +294,10 @@
         const confirmEmailButton = document.getElementById("confirm-email-button");
         if(confirmEmailButton) confirmEmailButton.addEventListener("click",confirmEmailButtonClick);
         else console.error("Element not found: 'confirm-email-button'");
+        
+        const resendEmailButton = document.getElementById("resend-email-button");
+        if (resendEmailButton) resendEmailButton.addEventListener("click", resendEmailButtonClick);
+        else console.error("Element not found: 'resend-email-button'");
     });
 
     function editClick(e) {
@@ -359,7 +365,6 @@
             e.target.blur();
         }
     }
-
     function confirmEmailButtonClick(){
         const confirmEmailInput=document.getElementById("confirm-email-input");
         if(!confirmEmailInput) throw "Element not found: 'confirm-email-input'";
@@ -386,4 +391,11 @@
             }
         });
     }   
+    function resendEmailButtonClick(){
+        window.fetch("/User/ResendConfirmEmail",{
+            method:'PATCH'
+        }).then(r=>r.text()).then(t=>{
+            console.log(t);
+        });
+    }
 </script>

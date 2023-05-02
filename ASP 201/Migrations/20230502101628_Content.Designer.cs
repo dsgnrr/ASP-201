@@ -3,6 +3,7 @@ using System;
 using ASP_201.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ASP_201.Migrations
 {
     [DbContext(typeof(DataContext))]
-    partial class DataContextModelSnapshot : ModelSnapshot
+    [Migration("20230502101628_Content")]
+    partial class Content
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -59,7 +62,7 @@ namespace ASP_201.Migrations
                     b.Property<DateTime>("CreatedDt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<DateTime?>("DeletedDt")
+                    b.Property<DateTime>("DeletedDt")
                         .HasColumnType("datetime(6)");
 
                     b.Property<Guid?>("ReplyId")
@@ -101,7 +104,7 @@ namespace ASP_201.Migrations
                     b.Property<DateTime>("CreatedDt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<DateTime?>("DeletedDt")
+                    b.Property<DateTime>("DeletedDt")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Description")
@@ -129,7 +132,7 @@ namespace ASP_201.Migrations
                     b.Property<DateTime>("CreatedDt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<DateTime?>("DeletedDt")
+                    b.Property<DateTime>("DeletedDt")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Description")
@@ -160,7 +163,7 @@ namespace ASP_201.Migrations
                     b.Property<DateTime>("CreatedDt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<DateTime?>("DeletedDt")
+                    b.Property<DateTime>("DeletedDt")
                         .HasColumnType("datetime(6)");
 
                     b.Property<string>("Description")

@@ -168,27 +168,15 @@ namespace ASP_201.Controllers
                     LastEnterDt = null
                 };
                 dataContext.Users.Add(user);
-                dataContext.SaveChanges();
-                // Якщо дані у БД додані, надсилаємо код підтвердження
-                emailService.Send(
-                    "confirm_email",
-                    new Models.Email.ConfirmEmailModel 
-                    {
-                        Email = user.Email,
-                        RealName = user.RealName,
-                        EmailCode = user.EmailCode,
-                        ConfirmLink ="#"
-                    });
-                emailService.Send(
-                   "congratulation",
-                   new Models.Email.ConfirmEmailModel
-                   {
-                       Email = user.Email,
-                       RealName = user.RealName,
-                       EmailCode = user.EmailCode,
-                       ConfirmLink = "#"
-                   });
 
+                // Якщо дані у БД додані, надсилаємо код підтвердження
+                // генеруємо токен автоматичного підтвердження
+                var emailConfirmToken = _GenerateEmailConfirmToken(user);
+
+                // Надсилаємо листа з токеном
+                SendConfirmEmail(user, emailConfirmToken);
+                
+                dataContext.SaveChangesAsync();
                 return View(registrationModel);
             }
             else // не всі дані валідні — повертаємо на форму реєстрації
@@ -429,6 +417,103 @@ namespace ASP_201.Controllers
                 }
             }
             return Json(model);
+        }
+        [HttpGet]
+        public ViewResult ConfirmToken([FromQuery] String token)
+        {
+            try
+            {
+                // шукаєо токе за отрианим Id
+                var confirmToken = dataContext.EmailConfirmTokens
+                    .Find(Guid.Parse(token))
+                    ?? throw new Exception();
+                // шукаєо користувача за UserId
+                var user = dataContext.Users
+                    .Find(confirmToken.UserId)
+                    ?? throw new Exception();
+                if (user.Email != confirmToken.UserEmail)
+                    throw new Exception();
+                // оновлюємо дані
+                user.EmailCode = null;  // пошта підтверджена
+                confirmToken.Used += 1; // ведемо рахунок використання токена
+                dataContext.SaveChangesAsync();
+                ViewData["result"] = "Вітаємо, пошта успішно підтверджена";
+            }
+
+            catch
+            {
+                ViewData["result"] = "Перевірка не пройдена, не змінюйте посилання з листа";
+            }
+            
+            return View();
+        }
+        private EmailConfirmToken _GenerateEmailConfirmToken(Data.Entity.User user)
+        {
+            Data.Entity.EmailConfirmToken emailConfirmToken = new()
+            {
+                Id = Guid.NewGuid(),
+                UserId = user.Id,
+                UserEmail = user.Email,
+                Moment = DateTime.Now,
+                Used = 0
+            };
+            dataContext.EmailConfirmTokens.Add(emailConfirmToken);
+            return emailConfirmToken;
+        }
+
+        [HttpPatch]
+        public String ResendConfirmEmail()
+        {
+            if(HttpContext.User.Identity?.IsAuthenticated==false)
+            {
+                return "Unauthenticated";
+            }
+            try
+            {
+                User? user = dataContext.Users
+                    .Find(
+                    Guid.Parse(
+                        HttpContext.User.Claims
+                        .First(c => c.Type == ClaimTypes.Sid)
+                        .Value
+                        )) ?? throw new Exception();
+                // формуємо новий код підтвердження пошти
+                user.EmailCode = randomService.ConfirmCode(6);
+                // генеруєио токен автоматичного підтвердження
+                var emailConfirmToken = _GenerateEmailConfirmToken(user);
+
+                // зберігаємо новий код і токен
+                dataContext.SaveChangesAsync();
+
+                // надсилаємо листа
+                if (SendConfirmEmail(user, emailConfirmToken))
+                    return "OK";
+                else
+                    return "Send error";
+            }
+            catch
+            {
+                return "Unauthenticated";
+            }
+        }
+        private bool SendConfirmEmail(Data.Entity.User user,
+                                      Data.Entity.EmailConfirmToken emailConfirmToken)
+        {
+            //  формуємо посилання: схема://домен/User/ConfirmToken?token=...
+            //  схема - http або https домен(хост) - localhost:7572 
+            String confirmLink = $"{HttpContext.Request.Scheme}" +
+                $"://{HttpContext.Request.Host.Value}" +
+                $"/User/ConfirmToken?token={emailConfirmToken.Id}";
+
+            return emailService.Send(
+                "confirm_email",
+                new Models.Email.ConfirmEmailModel
+                {
+                    Email = user.Email,
+                    RealName = user.RealName,
+                    EmailCode = user.EmailCode!,
+                    ConfirmLink = confirmLink
+                });
         }
     }
 }

@@ -47,8 +47,14 @@
                     Context.User.Claims
                     .First(c => c.Type == ClaimTypes.NameIdentifier)
                     .Value;
-                    <a asp-controller="User" asp-action="Profile" asp-route-id="@userLogin">             
-                        <img src="~/avatars/@(userAvatar)" 
+                String emailCode =
+                    Context.User.Claims
+                    .First(c => c.Type == ClaimTypes.Email)
+                    .Value;
+                    <a asp-controller="User" asp-action="Profile" asp-route-id="@userLogin"
+                        class="@(emailCode is null?"":
+                                    "email-not-confirmed")">
+                    <img src="~/avatars/@(userAvatar)" 
                         alt="Ava"
                         title="@(userLogin)"
                         style="max-width: 70px; max-height: 40px; border-radius: 50%;"/>

@@ -58,7 +58,8 @@ namespace ASP_201.Middleware
                             new Claim(ClaimTypes.Sid ,userId),
                             new Claim(ClaimTypes.Name ,authUser.RealName),
                             new Claim(ClaimTypes.NameIdentifier ,authUser.Login),
-                            new Claim(ClaimTypes.UserData ,authUser.Avatar??String.Empty)
+                            new Claim(ClaimTypes.UserData ,authUser.Avatar??String.Empty),
+                            new Claim(ClaimTypes.Email,authUser.EmailCode??String.Empty)
                         };
                         /*Створюємо власника (Principal) із даними твердженнями*/
                         var principal = new ClaimsPrincipal(

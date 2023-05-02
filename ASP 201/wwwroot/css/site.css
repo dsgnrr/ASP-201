@@ -93,3 +93,19 @@ body {
 .filter-color-candy {
     filter: invert(19%) sepia(87%) saturate(3998%) hue-rotate(13deg) brightness(84%) contrast(123%);
 }
+.email-not-confirmed:hover::before {
+    content: "Email not confirmed"; /* добавляем контент в пустой псевдоэлемент */
+    position: absolute;
+    background-color:darkred;
+    color:white;
+    padding: 2px;
+    border: solid 1px white;
+    border-radius:8px;
+    right:10px;
+
+}
+.email-not-confirmed:hover::after {
+    content: ""; /* добавляем контент в пустой псевдоэлемент */
+    position: absolute;
+   
+}

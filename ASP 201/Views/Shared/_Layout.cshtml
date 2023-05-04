@@ -52,7 +52,7 @@
                     .First(c => c.Type == ClaimTypes.Email)
                     .Value;
                     <a asp-controller="User" asp-action="Profile" asp-route-id="@userLogin"
-                        class="@(emailCode is null?"":
+                        class="@(emailCode == String.Empty|| emailCode is null?"":
                                     "email-not-confirmed")">
                     <img src="~/avatars/@(userAvatar)" 
                         alt="Ava"

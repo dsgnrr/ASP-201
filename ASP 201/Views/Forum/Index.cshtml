@@ -16,13 +16,23 @@
     <div class="row">
         <div class="col col-6">
             <h5>Створити новий розділ</h5>
-            <form>
+            @if(Model.CreateMessage is not null)
+            {
+                <h6>
+                    <strong style='color: @(Model.IsMessagePositive==true?"green":"red")'>
+                        @Model.CreateMessage
+                    </strong>
+                </h6>
+            }
+            <form method="post" asp-action="CreateSection">
                 <div class="form-group">
                     <label for="section-title">Назва розділу</label>
-                    <input type="text" id="section-title"
-                                                     name="section-title"
-                                                     class="form-control"
-                                                     placeholder="Введіть назву розділу" />
+                    <input type="text" 
+                           id="section-title"
+                           name="section-title"
+                           class="form-control"
+                           value="@(Model.formModel is null?"":Model.formModel.Title)"
+                           placeholder="Введіть назву розділу" />
                 </div>
                 <div class="form-group">
                     <label for="section-description"  
@@ -30,8 +40,9 @@
                         <textarea class="form-control" rows="3"
                                   id="section-description"
                                   name="section-description"
-                                  placeholder="Введіть опис розділу"></textarea>
+                              placeholder="Введіть опис розділу">@(Model.formModel is null ? "" : Model.formModel.Description)</textarea>
                 </div>
+                <button type="submit" class="btn btn-light my-3">Додати</button>
             </form>
         </div>
     </div>

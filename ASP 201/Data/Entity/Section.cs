@@ -8,5 +8,8 @@
         public Guid     AuthorId    { get; set; }
         public DateTime CreatedDt   { get; set; }
         public DateTime? DeletedDt   { get; set; }
+
+        //Navigation
+        public User Author { get; set; } = null!;
     }
 }

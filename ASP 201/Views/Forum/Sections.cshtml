@@ -1,0 +1,52 @@
+﻿@model ASP_201.Models.Forum.ForumSectionsModel
+@{
+    ViewData["Title"] = "Розділ";
+}
+<dib>
+    <h1 class="display-4">Розділ</h1>
+</dib>
+
+@foreach(var Theme in Model.Themes)
+{
+    <p>@Theme.Title, @Theme.Description</p>
+}
+
+@if (Model.UserCanCreate)
+{
+    <div class="row">
+        <div class="col col-6">
+            <h5>Створити новий розділ</h5>
+            @if (Model.CreateMessage is not null)
+            {
+                <h6>
+                    <strong style='color: @(Model.IsMessagePositive==true?"green":"red")'>
+                        @Model.CreateMessage
+                    </strong>
+                </h6>
+            }
+            <form method="post" asp-action="CreateTheme">
+                <div class="form-group">
+                    <label for="theme-title">Назва теми розділу</label>
+                    <input type="text"
+                           id="theme-title"
+                           name="theme-title"
+                           class="form-control"
+                           value="@(Model.formModel is null?"":Model.formModel.Title)"
+                           placeholder="Введіть назву теми розділу" />
+                </div>
+                <div class="form-group">
+                    <label for="theme-description"  
+                           class="form-label">Опис теми розділу</label>
+                    <textarea class="form-control" rows="3"
+                              id="theme-description"
+                              name="theme-description"
+                              placeholder="Введіть опис теми розділу">@(Model.formModel is null ? "" : Model.formModel.Description)</textarea>
+                </div>
+
+                <input type="hidden" name="section-id" value="@Model.SectionId"/>
+                
+                <button type="submit" class="btn btn-light my-3">Додати</button>
+            </form>
+        </div>
+    </div>
+}

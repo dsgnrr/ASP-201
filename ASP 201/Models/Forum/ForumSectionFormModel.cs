@@ -2,7 +2,7 @@
 
 namespace ASP_201.Models.Forum
 {
-    public class ForumSectionModel
+    public class ForumSectionFormModel
     {
         [FromForm(Name ="section-title")]
         public string Title { get; set; } = null!;

@@ -5,11 +5,15 @@
 <dib>
     <h1 class="display-4">Форум</h1>
 </dib>
+<div class="row">
+    <div class="col col-8">
+        @foreach (var Section in Model.Sections)
+        {
+            @Html.DisplayFor(m=>Section,"ForumSection")
+        }
+    </div>
+</div>
 
-@foreach(var Section in Model.Sections)
-{
-    <p>@Section.Title</p>
-}
 
 @if(Model.UserCanCreate)
 {

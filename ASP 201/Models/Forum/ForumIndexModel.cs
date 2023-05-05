@@ -2,12 +2,12 @@
 {
     public class ForumIndexModel
     {
-        public List<Data.Entity.Section> Sections { get; set; } = null!;
+        public List<Forum.ForumSectionViewModel> Sections { get; set; } = null!;
         public Boolean UserCanCreate { get; set; }
 
         // Дані для створення нової секції
         public String? CreateMessage { get; set; }
         public Boolean? IsMessagePositive { get; set;}
-        public ForumSectionModel? formModel { get; set;}
+        public ForumSectionFormModel? formModel { get; set;}
     }
 }

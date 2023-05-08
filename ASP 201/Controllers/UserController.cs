@@ -176,7 +176,7 @@ namespace ASP_201.Controllers
                 // Надсилаємо листа з токеном
                 SendConfirmEmail(user, emailConfirmToken);
                 
-                dataContext.SaveChangesAsync();
+                dataContext.SaveChanges();
                 return View(registrationModel);
             }
             else // не всі дані валідні — повертаємо на форму реєстрації
@@ -344,6 +344,7 @@ namespace ASP_201.Controllers
                         {
                             user.Email = model.Value;
                             dataContext.SaveChanges();
+                            ResendConfirmEmail();
                         }
                         else throw new Exception(
                             $"Validation error: field '{model.Field}' with value '{model.Value}'");
@@ -436,7 +437,7 @@ namespace ASP_201.Controllers
                 // оновлюємо дані
                 user.EmailCode = null;  // пошта підтверджена
                 confirmToken.Used += 1; // ведемо рахунок використання токена
-                dataContext.SaveChangesAsync();
+                dataContext.SaveChanges();
                 ViewData["result"] = "Вітаємо, пошта успішно підтверджена";
             }
 
@@ -483,7 +484,7 @@ namespace ASP_201.Controllers
                 var emailConfirmToken = _GenerateEmailConfirmToken(user);
 
                 // зберігаємо новий код і токен
-                dataContext.SaveChangesAsync();
+                dataContext.SaveChanges();
 
                 // надсилаємо листа
                 if (SendConfirmEmail(user, emailConfirmToken))

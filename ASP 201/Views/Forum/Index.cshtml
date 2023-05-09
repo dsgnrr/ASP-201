@@ -46,6 +46,11 @@
                                   name="section-description"
                               placeholder="Введіть опис розділу">@(Model.formModel is null ? "" : Model.formModel.Description)</textarea>
                 </div>
+                <div class="form-group">
+                    <label for="section-logo"  
+                           class="form-label">Лого для розділу</label>
+                    <input type="file" class="form-control" id="section-logo" aria-describedby="inputGroupFileAddon04" aria-label="Завантажити">
+                </div>
                 <button type="submit" class="btn btn-light my-3">Додати</button>
             </form>
         </div>

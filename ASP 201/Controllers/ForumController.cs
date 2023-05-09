@@ -1,5 +1,6 @@
 ﻿using ASP_201.Data;
 using ASP_201.Models.Forum;
+using ASP_201.Services.Transliterate;
 using ASP_201.Services.Validation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -15,15 +16,26 @@ namespace ASP_201.Controllers
         private readonly DataContext dataContext;
         private readonly ILogger<ForumController> logger;
         private readonly IValidationService validationService;
+        private readonly ITransliterationService transliterateService;
 
-        public ForumController(DataContext dataContext, ILogger<ForumController> logger, IValidationService validationService)
+        public ForumController(DataContext dataContext, ILogger<ForumController> logger, IValidationService validationService, ITransliterationService transliterateService)
         {
             this.dataContext = dataContext;
             this.logger = logger;
             this.validationService = validationService;
+            this.transliterateService = transliterateService;
         }
         private int _counter = 0;
-        private int Counter { get => _counter++; set => _counter = value; }
+        private int Counter {
+            get {
+                if ((_counter++) == 10) 
+                {
+                    _counter = 0;
+                    return _counter; 
+                }
+               return _counter++; 
+            } 
+            set => _counter = value; }
         public IActionResult Index()
         {
             ForumIndexModel model = new()
@@ -43,7 +55,7 @@ namespace ASP_201.Controllers
                         CreatedDtString = DateTime.Today == s.CreatedDt.Date
                             ? "Сьогодні "
                             : s.CreatedDt.ToString("dd.MM.yyyy HH:mm"),
-                        UrlIdString = s.Id.ToString(),
+                        UrlIdString = s.UrlId ?? s.Id.ToString(),
                         AuthorName = s.Author.IsRealNamePublic == true
                         ? s.Author.RealName
                         : s.Author.Login,
@@ -57,7 +69,7 @@ namespace ASP_201.Controllers
             {
                 model.CreateMessage = message;
                 model.IsMessagePositive = HttpContext.Session.GetInt32("isMessagePositive") == 1;
-                if(model.IsMessagePositive==false)
+                if (model.IsMessagePositive == false)
                 {
                     model.formModel = new()
                     {
@@ -71,17 +83,27 @@ namespace ASP_201.Controllers
                 HttpContext.Session.Remove("isMessagePositive");
             }
             return View(model);
+            //return View();
         }
 
         public ViewResult Sections([FromRoute] String id)
         {
+            Guid sectionId;
+            try
+            {
+                sectionId = Guid.Parse(id);
+            }
+            catch
+            {
+                sectionId = dataContext.Sections.First(s => s.UrlId == id).Id;
+            }
             ForumSectionsModel model = new()
             {
                 UserCanCreate = HttpContext.User.Identity?.IsAuthenticated == true,
-                SectionId = id,
+                SectionId = sectionId.ToString(),
                 Themes = dataContext
                     .Themes
-                    .Where(t => t.DeletedDt == null&&t.SectionId==Guid.Parse(id))
+                    .Where(t => t.DeletedDt == null&&t.SectionId==sectionId)
                     .Select(t => new ForumThemeViewModel()
                     {
                         Title = t.Title,
@@ -155,7 +177,9 @@ namespace ASP_201.Controllers
                         Title = forumModel.Title,
                         Description = forumModel.Description,
                         CreatedDt = DateTime.Now,
-                        AuthorId = userId
+                        AuthorId = userId,
+                        UrlId=transliterateService.Transliterate(forumModel.Title)
+
                     });
                     dataContext.SaveChanges();
                     HttpContext.Session.SetString("CreateSectionMesssage",

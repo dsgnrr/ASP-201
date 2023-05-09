@@ -8,5 +8,7 @@ namespace ASP_201.Models.Forum
         public string Title { get; set; } = null!;
         [FromForm(Name = "section-description")]
         public string Description { get; set; } = null!;
+        [FromForm(Name = "section-logo")]
+        public string SectionLogo { get; set; } = null!;
     }
 }

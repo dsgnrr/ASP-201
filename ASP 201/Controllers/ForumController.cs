@@ -103,7 +103,8 @@ namespace ASP_201.Controllers
                 SectionId = sectionId.ToString(),
                 Themes = dataContext
                     .Themes
-                    .Where(t => t.DeletedDt == null&&t.SectionId==sectionId)
+                    .Include(t => t.Author)
+                    .Where(t => t.DeletedDt == null && t.SectionId == sectionId)
                     .Select(t => new ForumThemeViewModel()
                     {
                         Title = t.Title,
@@ -112,7 +113,11 @@ namespace ASP_201.Controllers
                             ? "Сьогодні "
                             : t.CreatedDt.ToString("dd.MM.yyyy HH:mm"),
                         UrlIdString = t.Id.ToString(),
-                        SectionId = t.SectionId.ToString()
+                        SectionId = t.SectionId.ToString(),
+                        AuthorName = t.Author.IsRealNamePublic
+                            ? t.Author.RealName
+                            : t.Author.Login,
+                        AuthorAvatarUrl=$"/avatars/{t.Author.Avatar ?? "no-avatar.png"}"
                     })
                     .ToList()
             };
@@ -171,6 +176,14 @@ namespace ASP_201.Controllers
                     userId=Guid.Parse(
                         HttpContext.User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Sid)?.Value
                         );
+                    String trans = transliterateService.Transliterate(forumModel.Title);
+                    String urlId = trans;
+                    int n = 2;
+                    while(dataContext.Sections.Any(s => s.UrlId == urlId))
+                    {
+                        urlId = $"{trans}{n++}";
+                    }
+                    
                     dataContext.Sections.Add(new()
                     {
                         Id = Guid.NewGuid(),
@@ -178,7 +191,7 @@ namespace ASP_201.Controllers
                         Description = forumModel.Description,
                         CreatedDt = DateTime.Now,
                         AuthorId = userId,
-                        UrlId=transliterateService.Transliterate(forumModel.Title)
+                        UrlId=urlId
 
                     });
                     dataContext.SaveChanges();
@@ -254,7 +267,7 @@ namespace ASP_201.Controllers
                 }
 
             }
-            return RedirectToAction(nameof(Sections), new { id = formModel.SectionId });
+            return RedirectToAction(nameof(Sections), new { id = formModel.SectionId }); // TODO: id = UrlId ?? SectionId
         }
     }
 }

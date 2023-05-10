@@ -109,3 +109,9 @@ body {
     position: absolute;
    
 }
+
+/* Forum Theme Template */
+.ui-w-40{
+    max-height:40px;
+    max-width:100px;
+}

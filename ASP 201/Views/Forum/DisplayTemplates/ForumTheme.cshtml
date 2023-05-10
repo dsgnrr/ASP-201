@@ -1,0 +1,32 @@
+﻿@model ASP_201.Models.Forum.ForumThemeViewModel
+<div class="container-fluid mt-100">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card mb-4">
+                <div class="card-header p-1">
+                    <div class="media d-flex align-items-center">
+                        <img src="@Model.AuthorAvatarUrl" class="d-block ui-w-40 rounded-circle mx-2" alt="">
+                        <div class="media-body mx-2">
+                            <a href="javascript:void(0)" data-abc="true">@Model.AuthorName</a>
+                            <div class="text-muted small">13 days ago</div>
+                        </div>
+                        <div class="ms-auto text-muted small mx-2">
+                            <div>Member since <strong>01/1/2019</strong></div>
+                            <div><strong>134</strong> posts</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <h5>@Model.Title</h5>
+                    <p>
+                        @Model.Description    
+                    </p>
+                </div>
+                <div class="card-footer d-flex flex-wrap justify-content-between align-items-center px-3 py-1">
+                    <div > <a href="javascript:void(0)" class="text-muted d-inline-flex align-items-center align-middle" data-abc="true"> <i class="fa fa-heart text-danger"></i>&nbsp; <span class="align-middle">445</span> </a> <span class="text-muted d-inline-flex align-items-center align-middle ml-4"> <i class="fa fa-eye text-muted fsize-3"></i>&nbsp; <span class="align-middle">14532</span> </span> </div>
+                    <div > <button type="button" class="btn btn-outline-dark">Reply</button> </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

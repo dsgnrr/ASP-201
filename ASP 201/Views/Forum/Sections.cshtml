@@ -8,14 +8,14 @@
 
 @foreach(var Theme in Model.Themes)
 {
-    <p>@Theme.Title, @Theme.Description</p>
+    @Html.DisplayFor(m=>Theme,"ForumTheme");
 }
 
 @if (Model.UserCanCreate)
 {
     <div class="row">
         <div class="col col-6">
-            <h5>Створити новий розділ</h5>
+            <h5>Створити нову тему для розділу</h5>
             @if (Model.CreateMessage is not null)
             {
                 <h6>

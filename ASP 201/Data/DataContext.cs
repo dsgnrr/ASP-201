@@ -39,6 +39,10 @@ namespace ASP_201.Data
                 .HasOne(p => p.Reply) // Navy
                 .WithMany()            // Empty
                 .HasForeignKey(s => s.ReplyId);
+            modelBuilder.Entity<Entity.Topic>()
+                .HasOne(p => p.Author) // Navy
+                .WithMany()            // Empty
+                .HasForeignKey(s => s.AuthorId);
         }
 
     }

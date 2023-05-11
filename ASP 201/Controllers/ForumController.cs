@@ -179,6 +179,7 @@ namespace ASP_201.Controllers
                 ThemeId = id,
                 Topics = dataContext
                 .Topics
+                .Include(t=>t.Author)
                 .Where(t => t.DeletedDt == null && t.ThemeId == themeId)
                 .AsEnumerable()
                 .Select(t => new ForumTopicViewModel()
@@ -189,7 +190,13 @@ namespace ASP_201.Controllers
                     UrlIdString = t.Id.ToString(),
                     CreatedDtString = DateTime.Today == t.CreatedDt.Date
                             ? "Сьогодні "
-                            : t.CreatedDt.ToString("dd.MM.yyyy HH:mm")
+                            : t.CreatedDt.ToString("dd.MM.yyyy HH:mm"),
+                    Author = t.Author,
+                    AuthorName = t.Author.IsRealNamePublic
+                            ? t.Author.RealName
+                            : t.Author.Login,
+                    AuthorAvatarUrl = $"/avatars/{t.Author.Avatar ?? "no-avatar.png"}",
+                    AuthorRegistrationDate = t.Author.RegisterDt.ToString("dd:MM:yyyy")
                 })
                 .ToList()
             };

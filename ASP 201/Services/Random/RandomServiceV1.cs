@@ -16,6 +16,28 @@ namespace ASP_201.Services.Random
             _hashService = hashService;
         }
 
+        public string GeneratePhotoName(string photoName,string path)
+        {
+            // Генеруємо для файла нове ім'я, але зберігаємо розширення
+            String savedName = "";
+            String resultPath = "";
+            String ext = Path.GetExtension(photoName);
+            // TODO: перевірити розширення на перелік дозволених
+            savedName = _hashService.Hash(
+            photoName + DateTime.Now)[..16]
+                + ext;
+            resultPath = path + savedName;
+
+            while (System.IO.File.Exists(resultPath))
+            {
+                savedName = _hashService.Hash(
+                    photoName + DateTime.Now)[..16]
+                    + ext;
+                resultPath = path + savedName;
+            }
+            return savedName;
+        }
+
         public string AvatarPhotoName(string photoName)
         {
             // Генеруємо для файла нове ім'я, але зберігаємо розширення

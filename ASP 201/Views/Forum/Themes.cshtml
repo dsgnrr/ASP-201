@@ -1,0 +1,54 @@
+﻿@model ASP_201.Models.Forum.ForumThemesModel
+@{
+    ViewData["Title"] = "Тема";
+}
+<div>
+    <h1 class="display-4">@Model.Title</h1>
+</div>
+
+<div class="row row-cols-1 row-cols-md-3 g-4">
+    @foreach (var Topic in Model.Topics)
+    {
+        @Html.DisplayFor(m=>Topic,"ForumTopic")
+    }
+</div>
+
+@if (Model.UserCanCreate)
+{
+    <div class="row">
+        <div class="col col-6">
+            <h5>Задати питання</h5>
+            @if (Model.CreateMessage is not null)
+            {
+                <h6>
+                    <strong style='color: @(Model.IsMessagePositive==true?"green":"red")'>
+                        @Model.CreateMessage
+                    </strong>
+                </h6>
+            }
+            <form method="post" asp-action="CreateTopic">
+                <div class="form-group">
+                    <label for="theme-title">Питання</label>
+                    <input type="text"
+                           id="topic-title"
+                           name="topic-title"
+                           class="form-control"
+                           value="@(Model.formModel is null?"":Model.formModel.Title)"
+                           placeholder="Введіть коротке питання" />
+                </div>
+                <div class="form-group">
+                    <label for="topic-description"  
+                           class="form-label">Опис</label>
+                    <textarea class="form-control" rows="3"
+                              id="topic-description"
+                              name="topic-description"
+                              placeholder="Введіть опис">@(Model.formModel is null ? "" : Model.formModel.Description)</textarea>
+                </div>
+
+                <input type="hidden" name="theme-id" value="@Model.ThemeId" />
+
+                <button type="submit" class="btn btn-light my-3">Додати</button>
+            </form>
+        </div>
+    </div>
+}

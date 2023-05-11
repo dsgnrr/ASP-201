@@ -1,0 +1,14 @@
+﻿@model ASP_201.Models.Forum.ForumTopicViewModel
+<div class="col">
+    <div class="card">
+        <div class="card-header">
+            <h5 class="card-title">@Model.Title</h5>
+        </div>
+        <div class="card-body">
+            <h5 class="card-title">@Model.Title</h5>
+            <p class="card-text">@Model.Description</p>
+            <a asp-action="Topics" asp-route-id="@Model.UrlIdString"
+                class="float-end">Обговорення</a>
+        </div>
+    </div>
+</div>

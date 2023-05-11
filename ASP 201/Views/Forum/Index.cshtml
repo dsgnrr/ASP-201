@@ -28,7 +28,7 @@
                     </strong>
                 </h6>
             }
-            <form method="post" asp-action="CreateSection">
+            <form method="post" asp-action="CreateSection" enctype="multipart/form-data">
                 <div class="form-group">
                     <label for="section-title">Назва розділу</label>
                     <input type="text" 
@@ -49,7 +49,7 @@
                 <div class="form-group">
                     <label for="section-logo"  
                            class="form-label">Лого для розділу</label>
-                    <input type="file" class="form-control" id="section-logo" aria-describedby="inputGroupFileAddon04" aria-label="Завантажити">
+                    <input type="file" class="form-control" id="section-logo" name="section-logo" @*aria-describedby="inputGroupFileAddon04"*@ aria-label="Завантажити">
                 </div>
                 <button type="submit" class="btn btn-light my-3">Додати</button>
             </form>

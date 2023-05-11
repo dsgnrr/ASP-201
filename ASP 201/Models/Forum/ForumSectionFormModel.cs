@@ -9,6 +9,6 @@ namespace ASP_201.Models.Forum
         [FromForm(Name = "section-description")]
         public string Description { get; set; } = null!;
         [FromForm(Name = "section-logo")]
-        public string SectionLogo { get; set; } = null!;
+        public IFormFile SectionLogo { get; set; } = null!;
     }
 }

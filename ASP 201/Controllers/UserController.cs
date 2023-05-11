@@ -133,9 +133,10 @@ namespace ASP_201.Controllers
             {
                 if (registrationModel.Avatar.Length > 1024)
                 {
-                    savedName = randomService.AvatarPhotoName(registrationModel.Avatar.FileName);
-                    String path = "wwwroot/avatars/" + savedName;
-                    using FileStream fs = new(path, FileMode.Create);
+                    String path = "wwwroot/avatars/";
+                    savedName = randomService.GeneratePhotoName(registrationModel.Avatar.FileName,path);
+                    String resultPath = "wwwroot/avatars/" + savedName;
+                    using FileStream fs = new(resultPath, FileMode.Create);
                     registrationModel.Avatar.CopyTo(fs);
                     ViewData["savedName"] = savedName;
                 }

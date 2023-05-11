@@ -1,0 +1,57 @@
+﻿@model ASP_201.Models.Forum.ForumTopicsModel
+@{
+    ViewData["Title"] = "Питання";
+}
+
+<div>
+    <h1 class="display-4">@Model.Title</h1>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        @Model.Description
+    </div>
+</div>
+
+<div class="container">
+    <div class="row">
+        @foreach (var Post in Model.Posts)
+        {
+           @Html.DisplayFor(m=>Post,"ForumPost")
+        }
+    </div>
+</div>
+
+
+@if (Model.UserCanCreate)
+{
+    <div class="row">
+        <div class="col col-6">
+            <h5>Дати відповідь</h5>
+            @if (Model.CreateMessage is not null)
+            {
+                <h6>
+                    <strong style='color: @(Model.IsMessagePositive==true?"green":"red")'>
+                        @Model.CreateMessage
+                    </strong>
+                </h6>
+            }
+            <form method="post" asp-action="CreatePost">
+                <div class="form-group">
+                    <label for="post-content"  
+                           class="form-label">Контент</label>
+                    <textarea class="form-control" rows="3"
+                              id="post-content"
+                              name="post-content"
+                              placeholder="Введіть текст відовіді">@(Model.formModel is null ? "" : Model.formModel.Content)</textarea>
+                </div>
+
+                <input type="hidden" name="topic-id" value="@Model.TopicId" />
+                <input type="hidden" name="reply-id" 
+                    value="@(Model.formModel is null?"":Model.formModel.ReplyId)" />
+
+                <button type="submit" class="btn btn-light my-3">Опублікувати</button>
+            </form>
+        </div>
+    </div>
+}

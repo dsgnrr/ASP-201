@@ -5,13 +5,13 @@
             <div class="card mb-4">
                 <div class="card-header p-1">
                     <div class="media d-flex align-items-center">
-                        <img src="@Model.AuthorAvatarUrl" class="d-block ui-w-40 rounded-circle mx-2" alt="">
+                        <img src="@Model.AuthorAvatarUrl" style="max-height: 40px; max-width:100px" class="d-block ui-w-40 rounded-circle mx-2" alt="">
                         <div class="media-body mx-2">
-                            <a href="javascript:void(0)" data-abc="true">@Model.AuthorName</a>
-                            <div class="text-muted small">13 days ago</div>
+                            <a asp-controller="User" asp-action="Profile" asp-route-id="@Model.Author.Login" data-abc="true">@Model.AuthorName</a>
+                            <div class="text-muted small">@Model.CreatedDtString</div>
                         </div>
                         <div class="ms-auto text-muted small mx-2">
-                            <div>Member since <strong>01/1/2019</strong></div>
+                            <div>Member since <strong>@Model.AuthorRegistrationDate</strong></div>
                             <div><strong>134</strong> posts</div>
                         </div>
                     </div>

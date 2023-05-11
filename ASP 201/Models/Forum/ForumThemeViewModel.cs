@@ -11,6 +11,9 @@
         //Author
         public String AuthorName { get; set; } = null!;
         public String AuthorAvatarUrl { get; set; } = null!;
+        public String AuthorRegistrationDate { get; set; } = null!;
+
+        public Data.Entity.User Author { get; set; } = null!;
 
     }
 }

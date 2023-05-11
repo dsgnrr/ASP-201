@@ -114,6 +114,11 @@ body {
     max-height: 40px;
 }
 
+.ui-w-40 {
+    max-height: 40px;
+    max-width: 40px;
+}
+
 /*post template*/
 @media (min-width: 0) {
     .g-mr-15 {

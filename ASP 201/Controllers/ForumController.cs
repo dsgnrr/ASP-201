@@ -244,10 +244,12 @@ namespace ASP_201.Controllers
                             : t.CreatedDt.ToString("dd.MM.yyyy HH:mm"),
                         UrlIdString = t.Id.ToString(),
                         SectionId = t.SectionId.ToString(),
+                        Author = t.Author,
                         AuthorName = t.Author.IsRealNamePublic
                             ? t.Author.RealName
                             : t.Author.Login,
-                        AuthorAvatarUrl = $"/avatars/{t.Author.Avatar ?? "no-avatar.png"}"
+                        AuthorAvatarUrl = $"/avatars/{t.Author.Avatar ?? "no-avatar.png"}",
+                        AuthorRegistrationDate = t.Author.RegisterDt.ToString("dd:MM:yyyy")
                     })
                     .ToList()
             };

@@ -39,7 +39,10 @@ namespace ASP_201.Controllers
             this.configuration = configuration;
         }
 
-        
+        public IActionResult WebApi()
+        {
+            return View();
+        }
         public ViewResult EmailConfirmation()
         {
             // дістаємо параметр з конфігураціїї

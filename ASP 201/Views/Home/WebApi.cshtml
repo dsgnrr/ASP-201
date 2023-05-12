@@ -1,0 +1,143 @@
+﻿@{
+    ViewData["Title"] = "Web API";
+}
+
+<div>
+    <h1 class="display-4">Web API</h1>
+</div>
+
+<p>
+    API - Application Program Interface - інтерфейс взаємодії програми.
+    Програма (у даному контексті) - пвений інформаційний центр, який керує даними -
+    зберігає та поширює між додатками.<br/>
+    Додаток (Application) - застосунок, який для своєї роботи використовує дані,
+    надані програмою.<br />
+    Інтерфейс - спосіб взаємодії - набір правил інформаційного обміну.
+</p>
+<p>
+    Притсавка "Web" свідчить про використання иережевого HTTP проткоолу.
+    Такі API базуються на можливостях HTTP з передачі даних:
+</p>
+<ul>
+    <li>
+        Метод запиту - літерал (слово) з якого починається запит.
+        Існують стандартні методи (GET, POST, PATCH, DELETE, OPTIONS, HEAD, TRACE)
+        розшиерні методи - "промислові" стандарти (LINK, UNLINK, CONNECT, PURGE, ...)
+        нестандартні методи - які існують у межах лише даного ПЗ (HELO, QUIT, PASS, ... можно створювати свої)
+    </li>
+    <li>
+        <a asp-action="UrlPage">URL</a> - може містити path та query, які можна міняти, вказуючи параметри
+    </li>
+    <li>
+        Заголовки (headers) - дані у формі "ключ: значення; параметри" для
+        зазначення деталей запиту - тип контенту, довжина контенту, кодування символів,
+        архівування (якщо є), Cookie, токени та інш.
+    </li>
+    <li>
+        Тіло (body) - решта запиту (після заголовків), яка містить довільні дані -
+        як тестової, так і бінарної природи.
+    </li>
+</ul>
+<p>
+    API, як правило, призначене для "машино-машинної" взаємодії. Дані, що передаються,
+    базуються не на людино-зрозумілих сутностях, а на машинних кодах, статусах, токенах,
+    тощо. На відміну від MVC, призначеного для людини, у API повідомлення про результати
+    нормально передавати цифровими кодами. У веб-API вживаються HTTP статус-коди.
+</p>
+<p>
+    Реалізація API у ASP. <br/>
+    Для API вживається окремий вид контроллерів - ApiController (ControllerBase) <br />
+</p>
+
+<ul>
+    <li>Вони не мають представлення, дані від них передаються у формі JSON</li>
+    <li>
+        Вони мають постійну адресу, а різні методу класу викликаються в залежності
+        від методу запиту (далі ctr - ім'я контроллеру).<br />
+        MVC: GET /ctr/page1,  GET /ctr/page2,  GET /ctr/page3
+        <br />
+        API: GET /ctr,  POST /ctr,  PUT /ctr
+    </li>
+    <li>
+        Тип повернення методів як правило відповідає типам даних (об'єктів),
+        для узагальнення вживається <code>object</code>
+    </li>
+    <li>
+        Redirect не є необхідним для POST запитів (як у MVC), тут всі методи
+        фактично рівнозначні
+    </li>
+    <li>
+        Випробування - якщо MVC контроллери випробовують браузером, то API
+        контроллери - або фронтендом, або спецпрограмамаи на кшталт Postman
+    </li>
+</ul>
+<div class="card col-6">
+    <div class="card-body">
+        <div class="row">
+            <div class="col col-3">
+                <button class="btn btn-primary" id="get-button" data-send="GetData">GET</button>
+                <button class="btn btn-primary" id="post-button" data-send="PostData">POST</button>
+                <button class="btn btn-primary" id="link-button" data-send="LinktData">LINK</button>
+            </div>
+            <div class="col col-3">
+                <p id="request-result"></p>
+            </div>
+        </div>
+    </div>
+</div>
+<p></p>
+<p></p>
+<p></p>
+
+<script>
+    document.addEventListener("DOMContentLoaded",()=>{
+        const getButton=document.getElementById('get-button');
+        if(getButton) getButton.addEventListener('click',getButtonClick);
+        else console.error("'get-button' not found")
+
+        const postButton = document.getElementById('post-button');
+        if (postButton) postButton.addEventListener('click', postButtonClick);
+        else console.error("'post-button' not found")
+
+        const linkButton = document.getElementById('link-button');
+        if (linkButton) linkButton.addEventListener('click', linkButtonClick);
+        else console.error("'link-button' not found")
+    });
+    function getButtonClick(e) {
+        // передача даних - у GET запитів не повинно бути тіла, тому дані передаються в query
+        const data = e.target.getAttribute("data-send");
+        window.fetch("/api/rates?data="+data)
+        .then(r=>r.json())
+        .then(j => {
+            document.getElementById("request-result").innerText=j.result;
+        })
+    }
+    function postButtonClick(e){
+        const data = e.target.getAttribute("data-send");
+        window.fetch("/api/rates",{
+            method:"POST",
+            headers:{
+                'Content-Type':'application/json' // якщо є тіло, то заголовок Content-Type 
+            },                                    // Content-Type обов'язковий
+            body: JSON.stringify({'data':data}) // POST може містити тіло
+        })
+            .then(r => r.json())
+            .then(j => {
+                document.getElementById("request-result").innerText = j.result;
+            })
+    }
+    function linkButtonClick(e) {
+        const data = e.target.getAttribute("data-send");
+        window.fetch("/api/rates", {
+            method: "LINK",
+            headers: {
+                'Content-Type': 'application/json' // якщо є тіло, то заголовок Content-Type
+            },                                    // Content-Type обов'язковий
+            body: JSON.stringify({ 'data': data }) // POST може містити тіло
+        })
+            .then(r => r.json())
+            .then(j => {
+                document.getElementById("request-result").innerText = j.result;
+            })
+    }
+</script>

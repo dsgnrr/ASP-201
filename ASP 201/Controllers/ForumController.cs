@@ -51,6 +51,7 @@ namespace ASP_201.Controllers
                 Sections = dataContext
                     .Sections
                     .Include(s => s.Author) // включити навігаційну валстивість Author
+                    .Include(s => s.RateList)
                     .Where(s => s.DeletedDt == null)
                     .OrderByDescending(s => s.CreatedDt)
                     .AsEnumerable() // перетворить IQueriable в IEnumerable
@@ -65,12 +66,15 @@ namespace ASP_201.Controllers
                             ? "Сьогодні "
                             : s.CreatedDt.ToString("dd.MM.yyyy HH:mm"),
                         UrlIdString = s.UrlId ?? s.Id.ToString(),
+                        IdString=s.Id.ToString(),
                         AuthorName = s.Author.IsRealNamePublic == true
                         ? s.Author.RealName
                         : s.Author.Login,
                         AuthorAvatarUrl = s.Author.Avatar == null
                             ? "/avatars/no-avatar.png"
-                            : $"/avatars/{s.Author.Avatar}"
+                            : $"/avatars/{s.Author.Avatar}",
+                        LikesCount = s.RateList.Count(r => r.Rating > 0),
+                        DislikesCount = s.RateList.Count(r => r.Rating < 0)
                     })
                     .ToList()
             };

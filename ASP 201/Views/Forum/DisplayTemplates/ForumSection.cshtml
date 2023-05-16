@@ -11,11 +11,33 @@
                 <p class="card-text">@Model.Description</p>
                 <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
             </div>
-            <div class="card-footer">
-                Розпочато: @Model.CreatedDtString
-                Автор: <img src="@Model.AuthorAvatarUrl" style="border-radius: 100%; max-width: 30px; max-height: 25px;" alt="Avatar"/>
-                @Model.AuthorName
-                <a asp-action="Sections" asp-route-id="@Model.UrlIdString">Перейти</a>
+            <div class="card-footer d-flex align-items-center">
+                <div class="mx-3">
+                    Розпочато: <br />
+                    @Model.CreatedDtString
+                </div>
+                <img src="@Model.AuthorAvatarUrl" style="max-width:50px; max-height:50px" alt="Avatar" />
+                <div>
+                    Автор: <br/>
+                    @Model.AuthorName
+                </div>
+
+                <span class="g-color-gray-dark-v4 mx-2" 
+                    style="margin-left: 3em;"
+                    data-rating="@Model.IdString"
+                    data-rating-value="1"
+                    role="button">
+                    <i class="bi-hand-thumbs-up"></i>
+                    @Model.LikesCount
+                </span>
+                <span class="g-color-gray-dark-v4 mx-2"
+                      data-rating="@Model.IdString"
+                      data-rating-value="-1"
+                      role="button">
+                    <i class="bi-hand-thumbs-down"></i>
+                    @Model.DislikesCount
+                </span>
+                <a class="ms-auto" asp-action="Sections" asp-route-id="@Model.UrlIdString">Перейти</a>
             </div>
         </div>
     </div>

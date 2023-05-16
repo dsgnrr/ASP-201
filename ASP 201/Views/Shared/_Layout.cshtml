@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/ASP 201.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 </head>
 <body>
     <header>
@@ -47,6 +48,10 @@
                     Context.User.Claims
                     .First(c => c.Type == ClaimTypes.NameIdentifier)
                     .Value;
+                String userId =
+                Context.User.Claims
+                .First(c => c.Type == ClaimTypes.Sid)
+                .Value;
                 String emailCode =
                     Context.User.Claims
                     .First(c => c.Type == ClaimTypes.Email)
@@ -60,7 +65,9 @@
                         style="max-width: 70px; max-height: 40px; border-radius: 50%;"/>
                     </a>
   
-                    <a asp-controller="User" asp-action="Logout" class="mx-3" title="Вийти">
+                    <a asp-controller="User" asp-action="Logout" 
+                        data-user-sid="@userId"
+                        class="mx-3" title="Вийти">
                         <svg xmlns="http://www.w3.org/2000/svg" 
                         width="16" 
                         height="16" 

@@ -39,6 +39,11 @@ namespace ASP_201.Data
                 .WithMany()            // Empty
                 .HasForeignKey(s => s.AuthorId);
 
+            modelBuilder.Entity<Entity.Theme>()
+                .HasMany(t => t.RateList)
+                .WithOne()
+                .HasForeignKey(r => r.ItemId);
+
             modelBuilder.Entity<Entity.Post>()
                 .HasOne(s => s.Author) // Navy
                 .WithMany()            // Empty

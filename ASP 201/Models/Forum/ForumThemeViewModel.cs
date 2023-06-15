@@ -15,5 +15,9 @@
 
         public Data.Entity.User Author { get; set; } = null!;
 
+        public int LikesCount { get; set; }
+        public int DislikesCount { get; set; }
+        public int? GivenRating { get; set; }
+
     }
 }

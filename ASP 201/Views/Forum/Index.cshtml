@@ -15,12 +15,12 @@
 </div>
 
 
-@if(Model.UserCanCreate)
+@if (Model.UserCanCreate)
 {
     <div class="row">
         <div class="col col-6">
             <h5>Створити новий розділ</h5>
-            @if(Model.CreateMessage is not null)
+            @if (Model.CreateMessage is not null)
             {
                 <h6>
                     <strong style='color: @(Model.IsMessagePositive==true?"green":"red")'>
@@ -31,7 +31,7 @@
             <form method="post" asp-action="CreateSection" enctype="multipart/form-data">
                 <div class="form-group">
                     <label for="section-title">Назва розділу</label>
-                    <input type="text" 
+                    <input type="text"
                            id="section-title"
                            name="section-title"
                            class="form-control"
@@ -40,10 +40,10 @@
                 </div>
                 <div class="form-group">
                     <label for="section-description"  
-                        class="form-label">Опис</label>
-                        <textarea class="form-control" rows="3"
-                                  id="section-description"
-                                  name="section-description"
+                           class="form-label">Опис</label>
+                    <textarea class="form-control" rows="3"
+                              id="section-description"
+                              name="section-description"
                               placeholder="Введіть опис розділу">@(Model.formModel is null ? "" : Model.formModel.Description)</textarea>
                 </div>
                 <div class="form-group">
@@ -57,38 +57,3 @@
     </div>
 }
 
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        for (let elem of document.querySelectorAll("[data-rating]")) {
-            elem.addEventListener('click', ratingClick);
-        }
-    });
-    function ratingClick(e) {
-        const sidElement = document.querySelector("[data-user-sid]");
-        if (!sidElement) {
-            alert("Для оцінювання необхідно авентифікуватись");
-            return;
-        }
-        const span = e.target.closest('span');
-        const data = {
-            "itemId": span.getAttribute("data-rating"),
-            "data": span.getAttribute("data-rating-value"),
-            "userId": sidElement.getAttribute("data-user-sid")
-        };
-        console.log(data);
-        window.fetch("/api/rates", {
-            method: "POST",
-            headers: {
-                'Content-Type': 'application/json' // якщо є тіло, то заголовок Content-Type
-            },                                    // Content-Type обов'язковий
-            body: JSON.stringify(data) // POST може містити тіло
-        })
-            .then(r => r.json())
-            .then(j => {
-                console.log(j);
-                if (j.statusCode === 201){
-                    location.reload();
-                }
-                })
-    }
-</script>
